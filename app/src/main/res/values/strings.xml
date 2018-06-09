@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sleep Tracker</string>
+    <string name="populate_database">Populate Database</string>
+    <string name="clear_database">Clear Database</string>
+</resources>
