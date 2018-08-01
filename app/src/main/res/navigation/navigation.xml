@@ -14,19 +14,25 @@
   ~ limitations under the License.
   -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:id="@+id/navigation"
+    app:startDestination="@id/barchartFragment">
 
     <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/navigation" />
+        android:id="@+id/barchartFragment"
+        android:name="com.example.android.sleeptracker.BarChartFragment"
+        android:label="fragment_barchart"
+        tools:layout="@layout/fragment_barchart">
+        <action
+            android:id="@+id/action_barchartFragment_to_detailFragment"
+            app:destination="@+id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.android.sleeptracker.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" />
 
-</android.support.constraint.ConstraintLayout>
+</navigation>
