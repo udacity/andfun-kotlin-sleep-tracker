@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Sleep Tracker</string>
-    <string name="populate_database">Populate Database</string>
-    <string name="clear_database">Clear Database</string>
+    <string name="app_name">Track My Sleep Quality</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

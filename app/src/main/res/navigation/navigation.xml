@@ -1,38 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright 2018, The Android Open Source Project
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/barchartFragment">
+    app:startDestination="@id/sleepTrackerFragment"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <fragment
-        android:id="@+id/barchartFragment"
-        android:name="com.example.android.sleeptracker.BarChartFragment"
-        android:label="fragment_barchart"
-        tools:layout="@layout/fragment_barchart">
-        <action
-            android:id="@+id/action_barchartFragment_to_detailFragment"
-            app:destination="@+id/detailFragment" />
+        android:id="@+id/sleepTrackerFragment"
+        android:name="com.example.android.trackmysleepquality.SleepTrackerFragment"
+        android:label="SleepTrackerFragment"
+        tools:layout="@layout/fragment_sleep_tracker">
+        <action android:id="@+id/action_sleepTrackerFragment_to_sleepQualityFragment2"
+            app:destination="@id/sleepQualityFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.example.android.sleeptracker.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
 
+    <fragment
+        android:id="@+id/sleepQualityFragment"
+        android:name="com.example.android.trackmysleepquality.SleepQualityFragment"
+        android:label="SleepQualityFragment"
+        tools:layout="@layout/fragment_quality_chooser">
+        <action
+            android:id="@+id/action_sleepQualityFragment_to_sleepTrackerFragment"
+            app:destination="@id/sleepTrackerFragment" />
+    </fragment>
 </navigation>
