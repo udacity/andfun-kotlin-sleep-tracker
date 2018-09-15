@@ -1,26 +1,42 @@
+/*
+ * Copyright 2018, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.android.trackmysleepquality
 
-
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
-import kotlinx.android.synthetic.main.fragment_sleep_tracker.*
 
 /**
- * A simple [Fragment] subclass.
+ * A fragment with buttons to record start and end times for sleep, which are saved in
+ * a database. Cumulative data is displayed in a simple scrollable TextView.
+ * (Because we have not learned about RecyclerView yet.)
+ * The Clear button will clear all data from the database.
  *
  */
 class SleepTrackerFragment : Fragment() {
 
-    private lateinit var sleepQualityViewModel: SleepQualityViewModel
+    private lateinit var sleepTrackerViewModel: SleepTrackerViewModel
     private lateinit var allNights: List<SleepNight>
     private lateinit var binding: FragmentSleepTrackerBinding
 
@@ -30,10 +46,10 @@ class SleepTrackerFragment : Fragment() {
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
 
-        sleepQualityViewModel =
-                ViewModelProviders.of(activity!!).get(SleepQualityViewModel::class.java)
+        sleepTrackerViewModel =
+                ViewModelProviders.of(activity!!).get(SleepTrackerViewModel::class.java)
 
-        sleepQualityViewModel.nights.observe(this, Observer<List<SleepNight>> { nights ->
+        sleepTrackerViewModel.nights.observe(this, Observer<List<SleepNight>> { nights ->
             nights?.apply {
                 allNights = nights
                 showSleep(binding.textview)
@@ -53,14 +69,14 @@ class SleepTrackerFragment : Fragment() {
     }
 
     private fun startSleep(view: View) {
-        sleepQualityViewModel.tonightCache = SleepNight()
+        sleepTrackerViewModel.tonight = SleepNight()
         binding.apply {
             startButton.isEnabled = false
             stopButton.isEnabled = true
             clearButton.isEnabled = true
             clearButton.isEnabled = false
         }
-        sleepQualityViewModel.insert(sleepQualityViewModel.tonightCache)
+        sleepTrackerViewModel.insert(sleepTrackerViewModel.tonight)
     }
 
     private fun stopSleep(view: View) {
@@ -69,31 +85,33 @@ class SleepTrackerFragment : Fragment() {
             stopButton.isEnabled = false
             clearButton.isEnabled = true
         }
-        sleepQualityViewModel.tonightCache.endDateTime = makeDateTimeString()
-        sleepQualityViewModel.tonightCache.endTimeMilli = System.currentTimeMillis()
-        sleepQualityViewModel.insert(sleepQualityViewModel.tonightCache)
+        sleepTrackerViewModel.tonight.endDateTime = makeDateTimeString()
+        sleepTrackerViewModel.tonight.endTimeMilli = System.currentTimeMillis()
+        sleepTrackerViewModel.update(sleepTrackerViewModel.tonight)
 
         view.findNavController().navigate(
                 SleepTrackerFragmentDirections
-                        .actionSleepTrackerFragmentToSleepQualityFragment2())
+                        .actionSleepTrackerFragmentToSleepQualityFragment(
+                                sleepTrackerViewModel.tonight.startTimeMilli))
     }
 
     private fun showSleep(view: View) {
-        binding.apply {
-            textview.text = "HERE IS YOUR SLEEP DATA\n\n"
-            for (night in allNights) {
-                textview.append("Start:\t${night.startDateTime}\n")
-                textview.append("End:\t${night.endDateTime}\n")
-                textview.append(
-                        "Hours / Minutes:\t ${night.endTimeMilli.minus(night.startTimeMilli) / 360000} " +
-                                ": ${night.endTimeMilli.minus(night.startTimeMilli) / 60000}\n")
-                textview.append("Quality:\t${night.sleepQualty}\n\n")
-            }
+        val sb = StringBuilder()
+        sb.append(getString(R.string.sleep_data_title))
+
+        for (night in allNights) {
+            sb.append("Start:\t${night.startDateTime}\n")
+            sb.append("End:\t${night.endDateTime}\n")
+            sb.append(
+                    "Hours / Minutes:\t ${night.endTimeMilli.minus(night.startTimeMilli) / 360000} " +
+                            ": ${night.endTimeMilli.minus(night.startTimeMilli) / 60000}\n")
+            sb.append("Quality:\t${night.sleepQualty}\n\n")
         }
+        binding.textview.text = sb.toString()
     }
 
     private fun clearData(view: View) {
-        sleepQualityViewModel.clear()
-        binding.textview.text = "All your data is gone forever."
+        sleepTrackerViewModel.clear()
+        binding.textview.text = getString(R.string.cleared_message)
     }
 }
