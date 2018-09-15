@@ -19,33 +19,38 @@ package com.example.android.trackmysleepquality
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 
 /**
- * ViewModel for SleepQualityFragment.
+ * ViewModel for SleepTrackerFragment.
  */
 
-class SleepQualityViewModel(application: Application) : AndroidViewModel(application) {
+class SleepTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
 
-    // TODO: I know we can combine this into one function
+    var nights = database.sleepQualityDao.getAllNights()
 
-    fun getNight(key: Long) = GlobalScope.async { database.sleepQualityDao.get(key) }
+    lateinit var tonight: SleepNight
 
-    fun get(key: Long): SleepNight = runBlocking {
-        getNight(key).await()
-    }
+    // TODO: The Style guide says not to use GlobalScope, so how do I set up a scope.
+    //val scope = CoroutineScope(Dispatchers.IO)
+    //scope.launch
 
-    fun setSleepQuality(sleepNightKey: Long, quality: Int) {
-        var tonight = get(sleepNightKey)
 
-        tonight.sleepQualty = quality
+    fun insert(night: SleepNight) =
+            GlobalScope.launch {
+                database.sleepQualityDao.insert(night)
+            }
 
-        GlobalScope.launch {
-            database.sleepQualityDao.update(tonight)
-        }
-    }
+    fun update(night: SleepNight) =
+            GlobalScope.launch {
+                database.sleepQualityDao.update(night)
+            }
+
+    fun clear() =
+            GlobalScope.launch {
+                database.sleepQualityDao.clear()
+            }
+
 }
