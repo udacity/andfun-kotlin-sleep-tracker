@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.android.sleeptracker.database
+package com.example.android.trackmysleepquality
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import android.arch.persistence.room.Query
+import java.text.SimpleDateFormat
+import java.util.*
 
-@Dao
-interface SleepDao {
-
-    @Query("SELECT * FROM sleep")
-    fun getAll(): List<SleepEntry>
-
-    @Insert(onConflict = REPLACE)
-    fun insert(sleepEntry: SleepEntry)
-
-    @Query("DELETE FROM sleep")
-    fun deleteAll()
+fun makeDateTimeString(): String {
+    var date = SimpleDateFormat("yyyy-MM-dd' Time: 'HH:mm")
+            .format(Calendar.getInstance().getTime()).toString()
+    return date
 }
