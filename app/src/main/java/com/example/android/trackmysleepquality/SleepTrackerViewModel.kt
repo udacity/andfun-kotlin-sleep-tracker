@@ -37,7 +37,6 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
     //val scope = CoroutineScope(Dispatchers.IO)
     //scope.launch
 
-
     fun insert(night: SleepNight) =
             GlobalScope.launch {
                 database.sleepQualityDao.insert(night)
