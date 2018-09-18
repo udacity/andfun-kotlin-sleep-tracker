@@ -18,10 +18,9 @@ package com.example.android.trackmysleepquality
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.Main
+import kotlin.coroutines.experimental.CoroutineContext
 
 /**
  * ViewModel for SleepQualityFragment.
@@ -29,11 +28,17 @@ import kotlinx.coroutines.experimental.runBlocking
 
 class SleepQualityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val database = getDatabase(application)
+    private var parentJob = Job()
 
-    // TODO: I know we can combine this into one function
+    // By default all the coroutines launched in this scope should be using the Main dispatcher
+    private val coroutineContext: CoroutineContext
+        get() = parentJob + Dispatchers.IO
+    private val scope = CoroutineScope(coroutineContext)
 
-    fun getNight(key: Long) = GlobalScope.async { database.sleepQualityDao.get(key) }
+    val database = SleepQualityDatabase.getDatabase(application, scope)
+
+
+    fun getNight(key: Long) = scope.async { database.sleepQualityDao().get(key) }
 
     fun get(key: Long): SleepNight = runBlocking {
         getNight(key).await()
@@ -44,8 +49,8 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
 
         tonight.sleepQualty = quality
 
-        GlobalScope.launch {
-            database.sleepQualityDao.update(tonight)
+        scope.launch {
+            database.sleepQualityDao().update(tonight)
         }
     }
 }

@@ -20,42 +20,45 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import kotlinx.coroutines.experimental.CoroutineScope
 
 /**
  * A database that stores SleepNight information.
  * And a global method to get access to the database.
  */
 
-@Database(entities = [SleepNight::class], version = 9)
+@Database(entities = [SleepNight::class], version = 10)
 abstract class SleepQualityDatabase : RoomDatabase() {
-    abstract val sleepQualityDao: SleepQualityDao
-}
 
-/**
- * Variable to hold a reference to the database.
- * If this is set, we return this when the database is requested,
- * otherwise, we build the database
- */
-private lateinit var INSTANCE: SleepQualityDatabase
+    abstract fun sleepQualityDao() : SleepQualityDao
 
-/**
- * Get access to the SleepQualityDatabase singleton.
- *
- * Using a singleton prevents having multiple instances of the database opened
- * at the same time, which would be a bad thing.
- *
- * @param context Application context
- */
-fun getDatabase(context: Context): SleepQualityDatabase {
-    synchronized(SleepQualityDatabase::class.java) {
-        if (!::INSTANCE.isInitialized) {
-            INSTANCE = Room.databaseBuilder(context.applicationContext,
-                    SleepQualityDatabase::class.java, "nights")
-                    // This means, every time we change the version number, we delete and
-                    // recreate the database, which is what we want during development.
-                    .fallbackToDestructiveMigration()
-                    .build()
+    companion object {
+        @Volatile
+        private var INSTANCE: SleepQualityDatabase? = null
+        fun getDatabase(
+                context: Context,
+                scope: CoroutineScope
+        ): SleepQualityDatabase {
+            val tempInstance = INSTANCE
+            if (tempInstance != null) {
+                return tempInstance
+            }
+            synchronized(this) {
+                val instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        SleepQualityDatabase::class.java,
+                        "word_database"
+                )
+                        // Wipes and rebuilds instead of migrating if no Migration object.
+                        // Migration is not part of this codelab.
+                        .fallbackToDestructiveMigration()
+                        .build()
+                INSTANCE = instance
+                return instance
+            }
         }
     }
-    return INSTANCE
 }
+
+
+
