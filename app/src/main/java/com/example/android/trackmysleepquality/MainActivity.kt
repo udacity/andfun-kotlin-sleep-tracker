@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.example.android.sleeptracker.database
+package com.example.android.trackmysleepquality
 
-import android.arch.persistence.room.TypeConverter
-import java.util.*
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
-class DateConverter {
+/**
+ * This main activity is just a container for our fragmemts,
+ * where the real action is.
+ */
 
-    @TypeConverter
-    fun toDate(timestamp: Long): Date {
-        return Date(timestamp)
-    }
+class MainActivity : AppCompatActivity() {
 
-    @TypeConverter
-    fun toTimestamp(date: Date): Long {
-        return date.time
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
     }
 }
