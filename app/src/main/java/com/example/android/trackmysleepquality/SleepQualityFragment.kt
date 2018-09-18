@@ -36,6 +36,8 @@ class SleepQualityFragment : Fragment() {
 
     private lateinit var sleepQualityViewModel: SleepQualityViewModel
     private lateinit var binding: FragmentQualityChooserBinding
+
+    // TODO: This is the code that fails.
     val sleepNightKey = SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
 
 
@@ -84,7 +86,7 @@ class SleepQualityFragment : Fragment() {
             }
         }
 
-        sleepQualityViewModel.setSleepQuality(sleepNightKey, quality)
+       sleepQualityViewModel.setSleepQuality(sleepNightKey, quality)
 
         view.findNavController().navigate(
                 SleepQualityFragmentDirections

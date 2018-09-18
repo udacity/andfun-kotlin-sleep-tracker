@@ -30,7 +30,6 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
 
     private var parentJob = Job()
 
-    // By default all the coroutines launched in this scope should be using the Main dispatcher
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.IO
     private val scope = CoroutineScope(coroutineContext)
