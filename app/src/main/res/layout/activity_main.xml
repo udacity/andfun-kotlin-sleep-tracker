@@ -14,13 +14,8 @@
   ~ limitations under the License.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
         <fragment
             android:id="@+id/myNavHostFragment"
@@ -30,5 +25,4 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/navigation" />
 
-    </LinearLayout>
-</layout>
+</merge>

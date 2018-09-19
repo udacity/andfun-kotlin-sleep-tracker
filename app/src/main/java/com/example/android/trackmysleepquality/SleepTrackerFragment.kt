@@ -49,13 +49,19 @@ class SleepTrackerFragment : Fragment() {
         sleepTrackerViewModel =
                 ViewModelProviders.of(activity!!).get(SleepTrackerViewModel::class.java)
 
+        // TODO: What's missing here to display the data?
         sleepTrackerViewModel.nights.observe(this, Observer<List<SleepNight>> { nights ->
             nights?.apply {
                 allNights = nights
                 showSleep(binding.textview)
+
             }
         })
         setClickListeners()
+
+        // Specify the current activity as the lifecycle owner of the binding.
+        // This is used so that the binding can observe LiveData updates
+        binding.setLifecycleOwner(this)
         return binding.root
     }
 
@@ -97,8 +103,6 @@ class SleepTrackerFragment : Fragment() {
                                 sleepTrackerViewModel.tonight.startTimeMilli))
     }
 
-    // @Lyla:
-    // TODO: Build the string first, then display it.
     // TODO: Is there a way to do this with LiveData + Data Binding?
     // TODO: ... in which case, I think we could use a map?
     private fun showSleep(view: View) {

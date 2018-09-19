@@ -42,4 +42,5 @@ interface SleepQualityDao {
 
     @Query("SELECT * from daily_sleep_quality_table ORDER BY start_time_milli DESC")
     fun getAllNights(): LiveData<List<SleepNight>>
+    //fun getAllNights(): List<SleepNight>
 }

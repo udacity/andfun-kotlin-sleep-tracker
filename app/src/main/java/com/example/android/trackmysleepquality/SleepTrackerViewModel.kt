@@ -19,6 +19,7 @@ package com.example.android.trackmysleepquality
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.android.trackmysleepquality.SleepQualityDatabase.Companion.getDatabase
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
@@ -34,6 +35,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
 
     private var parentJob = Job()
 
+
     // TODO: @Sean: Is this correct?
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.IO
@@ -43,7 +45,26 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
 
     lateinit var tonight: SleepNight
 
-    var nights = database.sleepQualityDao().getAllNights()
+    //val allNights : List<SleepNight>
+    var nights : LiveData<List<SleepNight>>
+
+    init {
+        //allNights = database.sleepQualityDao().getAllNights()
+        nights = database.sleepQualityDao().getAllNights()
+    }
+
+    // TODO: This is not right, but I don't know how to make the magic happen.
+    // That is, I can't get the data binding part to work.
+
+    //private val _nights = MutableLiveData<List<SleepNight>>()
+    //        val nights: LiveData<List<SleepNight>>
+    //           get() = _nights
+
+   // fun setNights() {
+   //     _nights.value = allNights
+   // }
+
+    // Accessing the database
 
     fun insert(night: SleepNight) =
             scope.launch {

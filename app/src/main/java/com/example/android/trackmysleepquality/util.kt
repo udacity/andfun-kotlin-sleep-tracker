@@ -19,7 +19,7 @@ package com.example.android.trackmysleepquality
 import java.text.SimpleDateFormat
 import java.util.*
 
-// TODO: Add comments. 
+// TODO: Add comments.
 
 fun makeDateTimeString(): String {
     var date = SimpleDateFormat("yyyy-MM-dd' Time: 'HH:mm")
