@@ -37,18 +37,18 @@ class SleepQualityFragment : Fragment() {
     private lateinit var sleepQualityViewModel: SleepQualityViewModel
     private lateinit var binding: FragmentQualityChooserBinding
 
-    // TODO: This is the code that fails.
-    val sleepNightKey = SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
-
+    var sleepNightKey = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        // TODO(Dan): Does this go here or Lyla wonders onActivityCreated?
+        sleepNightKey = SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
 
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_quality_chooser, container, false)
 
         // TODO: Add a comment that explains what this does, including activity!!
-        // TODO: first: find out ...
         sleepQualityViewModel =
                 ViewModelProviders.of(activity!!).get(SleepQualityViewModel::class.java)
 
@@ -72,6 +72,7 @@ class SleepQualityFragment : Fragment() {
         }
     }
 
+    // TODO: So where should this work be done? Also in the ViewModel?
     private fun setSleepQuality(view: View) {
         var quality = 3 // Easy default
 

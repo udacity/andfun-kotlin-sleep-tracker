@@ -27,7 +27,9 @@ import kotlinx.coroutines.experimental.CoroutineScope
  * And a global method to get access to the database.
  */
 
-@Database(entities = [SleepNight::class], version = 10)
+// TODO: This is copied from Florina's reviewed Room Kotlin codelab. Add comments.
+
+@Database(entities = [SleepNight::class], version = 11)
 abstract class SleepQualityDatabase : RoomDatabase() {
 
     abstract fun sleepQualityDao() : SleepQualityDao
@@ -47,7 +49,7 @@ abstract class SleepQualityDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                         context.applicationContext,
                         SleepQualityDatabase::class.java,
-                        "word_database"
+                        "night"
                 )
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this codelab.

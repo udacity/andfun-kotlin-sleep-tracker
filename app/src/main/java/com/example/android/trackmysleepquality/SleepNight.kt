@@ -34,6 +34,9 @@ data class SleepNight(
         @PrimaryKey @NonNull @ColumnInfo(name = "start_time_milli")
         val startTimeMilli: Long = System.currentTimeMillis()) {
 
+
+    // TODO: Add comment on why we do it this way.
+
     @ColumnInfo(name = "start_time")
     var startDateTime: String = makeDateTimeString()
 

@@ -30,9 +30,11 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 class SleepTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
+    //TODO: Add comments. Especially for coroutines.
+
     private var parentJob = Job()
 
-    // By default all the coroutines launched in this scope should be using the Main dispatcher
+    // TODO: @Sean: Is this correct?
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.IO
     private val scope = CoroutineScope(coroutineContext)

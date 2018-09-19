@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import com.example.android.trackmysleepquality.SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 
 /**
@@ -69,6 +68,7 @@ class SleepTrackerFragment : Fragment() {
         }
     }
 
+    // TODO: Sean says to move the click handler work into the view model.
     private fun startSleep(view: View) {
         sleepTrackerViewModel.tonight = SleepNight()
         binding.apply {
@@ -80,6 +80,7 @@ class SleepTrackerFragment : Fragment() {
         sleepTrackerViewModel.insert(sleepTrackerViewModel.tonight)
     }
 
+    // TODO: Sean says to move the click handler work into the view model.
     private fun stopSleep(view: View) {
         binding.apply {
             startButton.isEnabled = true
@@ -91,10 +92,15 @@ class SleepTrackerFragment : Fragment() {
         sleepTrackerViewModel.update(sleepTrackerViewModel.tonight)
 
         view.findNavController().navigate(
-                actionSleepTrackerFragmentToSleepQualityFragment(
+                SleepTrackerFragmentDirections
+                        .actionSleepTrackerFragmentToSleepQualityFragment(
                                 sleepTrackerViewModel.tonight.startTimeMilli))
     }
 
+    // @Lyla:
+    // TODO: Build the string first, then display it.
+    // TODO: Is there a way to do this with LiveData + Data Binding?
+    // TODO: ... in which case, I think we could use a map?
     private fun showSleep(view: View) {
         val sb = StringBuilder()
         sb.append(getString(R.string.sleep_data_title))

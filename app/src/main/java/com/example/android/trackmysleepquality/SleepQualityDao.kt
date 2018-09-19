@@ -26,6 +26,8 @@ import androidx.room.*
 @Dao
 interface SleepQualityDao {
 
+    // TODO: Add comments.
+
     @Insert
     fun insert(night: SleepNight)
 

@@ -36,7 +36,7 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
 
     val database = SleepQualityDatabase.getDatabase(application, scope)
 
-
+    // TODO: Async is a bad pattern. Don't use.
     fun getNight(key: Long) = scope.async { database.sleepQualityDao().get(key) }
 
     fun get(key: Long): SleepNight = runBlocking {
