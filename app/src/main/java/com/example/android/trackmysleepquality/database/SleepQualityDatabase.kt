@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.trackmysleepquality.database
 
 import android.content.Context
 import androidx.room.Database
@@ -29,7 +29,7 @@ import kotlinx.coroutines.experimental.CoroutineScope
 
 // TODO: This is copied from Florina's reviewed Room Kotlin codelab. Add comments.
 
-@Database(entities = [SleepNight::class], version = 11)
+@Database(entities = [SleepNight::class], version = 12)
 abstract class SleepQualityDatabase : RoomDatabase() {
 
     abstract fun sleepQualityDao() : SleepQualityDao

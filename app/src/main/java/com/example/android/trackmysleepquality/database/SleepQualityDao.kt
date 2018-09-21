@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.trackmysleepquality.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.android.trackmysleepquality.database.SleepNight
 
 /**
  * Defines methods for using the SleepNight class with Room.

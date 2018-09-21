@@ -19,15 +19,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="sleepTrackerViewModel"
-            type="com.example.android.trackmysleepquality.SleepTrackerViewModel" />
+            type="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SleepTrackerFragment">
+        tools:context=".sleeptracker.SleepTrackerFragment">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                android:text="@{String.valueOf(sleepTrackerViewModel.nights)}"
+                app:nights="@{sleepTrackerViewModel.nights}"
             />
         </ScrollView>
 
@@ -58,7 +59,8 @@
             app:layout_constraintBaseline_toBaselineOf="@id/stop_button"
             app:layout_constraintEnd_toStartOf="@+id/stop_button"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:enabled="true"/>
 
         <Button
             android:id="@+id/stop_button"
@@ -69,7 +71,8 @@
             android:text="@string/stop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/start_button"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:enabled="false"/>
 
         <Button
             android:id="@+id/clear_button"
@@ -81,7 +84,8 @@
             android:text="@string/clear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:enabled="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

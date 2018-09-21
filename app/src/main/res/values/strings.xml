@@ -19,10 +19,12 @@
 
     <string name="sleep_tracker_fragment_label">SleepTrackerFragment</string>
     <string name="sleep_quality_fragment_label">SleepQualityFragment</string>
+
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="clear">Clear</string>
 
+    <!-- contentDescription strings -->
     <string name="quality_0">Sleep Quality 0</string>
     <string name="quality_1">Sleep Quality 1</string>
     <string name="quality_2">Sleep Quality 2</string>
@@ -31,6 +33,4 @@
     <string name="quality_5">Sleep Quality 5</string>
 
     <string name="cleared_message">All your data is gone forever.</string>
-    <string name="sleep_data_title">HERE IS YOUR SLEEP DATA\n\n</string>
-
 </resources>

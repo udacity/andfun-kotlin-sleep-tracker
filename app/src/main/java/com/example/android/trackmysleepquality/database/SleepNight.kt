@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.trackmysleepquality.database
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Class that represents one night's sleep through start and end times, and the sleep quality.
- * The time is collected as milliseconds for calculations and accuracy, and as a date-time string
- * for display. Since the date/time don't change once recorded, it is much cheaper to do the
- * conversion once and store the information in the database.
- * The quality rating is numerical, and can be surfaced to the user in any way desired.
+ * The time is collected as milliseconds.
+ * The quality rating is numerical,
+ * and can be surfaced to the user in any way desired.
  */
 
 @Entity(tableName = "daily_sleep_quality_table")
@@ -34,17 +35,8 @@ data class SleepNight(
         @PrimaryKey @NonNull @ColumnInfo(name = "start_time_milli")
         val startTimeMilli: Long = System.currentTimeMillis()) {
 
-
-    // TODO: Add comment on why we do it this way.
-
-    @ColumnInfo(name = "start_time")
-    var startDateTime: String = makeDateTimeString()
-
     @ColumnInfo(name = "end_time_milli")
-    var endTimeMilli: Long = 0
-
-    @ColumnInfo(name = "end_time")
-    var endDateTime: String = ""
+    var endTimeMilli: Long = 0L
 
     @ColumnInfo(name = "quality_rating")
     var sleepQualty: Int = 4

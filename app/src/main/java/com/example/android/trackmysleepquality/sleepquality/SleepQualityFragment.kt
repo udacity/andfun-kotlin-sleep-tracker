@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.trackmysleepquality.sleepquality
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +24,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.databinding.FragmentQualityChooserBinding
 
 /**
@@ -52,7 +53,6 @@ class SleepQualityFragment : Fragment() {
         sleepQualityViewModel =
                 ViewModelProviders.of(activity!!).get(SleepQualityViewModel::class.java)
 
-
         setClickListeners()
         return binding.root
     }
@@ -60,8 +60,6 @@ class SleepQualityFragment : Fragment() {
     /**
      * Attaches listeners to all the views.
      */
-    // TODO: Sean: Move to data binding lambdas
-    // TODO: What does that mean?
     private fun setClickListeners() {
         val clickableViews: List<View> =
                 listOf(binding.qualityOneImage, binding.qualityTwoImage, binding.qualityThreeImage,
@@ -72,25 +70,10 @@ class SleepQualityFragment : Fragment() {
         }
     }
 
-    // TODO: So where should this work be done? Also in the ViewModel?
     private fun setSleepQuality(view: View) {
-        var quality = 3 // Easy default
-
-        if (-1 != view.id) {
-            when (view.id) {
-                R.id.quality_zero_image -> quality = 0
-                R.id.quality_one_image -> quality = 1
-                R.id.quality_two_image -> quality = 2
-                R.id.quality_three_image -> quality = 3
-                R.id.quality_four_image -> quality = 4
-                R.id.quality_five_image -> quality = 5
-            }
-        }
-
-       sleepQualityViewModel.setSleepQuality(sleepNightKey, quality)
+       sleepQualityViewModel.setSleepQuality(sleepNightKey, view.id)
 
         view.findNavController().navigate(
-                SleepQualityFragmentDirections
-                        .actionSleepQualityFragmentToSleepTrackerFragment())
+                SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
     }
 }

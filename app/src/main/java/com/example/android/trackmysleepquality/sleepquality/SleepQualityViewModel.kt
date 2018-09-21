@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.trackmysleepquality.sleepquality
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.database.SleepQualityDatabase
 import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.Main
 import kotlin.coroutines.experimental.CoroutineContext
 
 /**
@@ -36,16 +38,29 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
 
     val database = SleepQualityDatabase.getDatabase(application, scope)
 
-    // TODO: Async is a bad pattern. Don't use.
+    // TODO: Use different pattern?
     fun getNight(key: Long) = scope.async { database.sleepQualityDao().get(key) }
 
     fun get(key: Long): SleepNight = runBlocking {
         getNight(key).await()
     }
 
-    fun setSleepQuality(sleepNightKey: Long, quality: Int) {
+    fun setSleepQuality(sleepNightKey: Long, viewId: Int) {
+
         var tonight = get(sleepNightKey)
 
+        var quality = 3 // Easy default
+
+        if (-1 != viewId) {
+            when (viewId) {
+                R.id.quality_zero_image -> quality = 0
+                R.id.quality_one_image -> quality = 1
+                R.id.quality_two_image -> quality = 2
+                R.id.quality_three_image -> quality = 3
+                R.id.quality_four_image -> quality = 4
+                R.id.quality_five_image -> quality = 5
+            }
+        }
         tonight.sleepQualty = quality
 
         scope.launch {
