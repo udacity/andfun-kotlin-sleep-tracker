@@ -19,6 +19,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.database.SleepQualityDatabase.Companion.getDatabase
 import kotlinx.coroutines.experimental.*
@@ -43,11 +44,28 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
     val database = getDatabase(application, scope)
 
     lateinit var tonight: SleepNight
-
     var nights: LiveData<List<SleepNight>>
+
+    // For keeping the button states in the ViewModel
+    // TODO: I don't understand the pattern used here to add the required getter
+    private val _startButtonState = MutableLiveData<Boolean>()
+    val startButtonState: LiveData<Boolean>
+        get() = _startButtonState
+
+    private val _stopButtonState = MutableLiveData<Boolean>()
+    val stopButtonState: LiveData<Boolean>
+        get() = _stopButtonState
+
+    private val _clearButtonState = MutableLiveData<Boolean>()
+    val clearButtonState: LiveData<Boolean>
+        get() = _clearButtonState
 
     init {
         nights = database.sleepQualityDao().getAllNights()
+
+        _startButtonState.value = true
+        _stopButtonState.value = false
+        _clearButtonState.value = true
     }
 
     fun insert(night: SleepNight) =
@@ -73,12 +91,28 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
     /** Methods for buttons presses **/
 
     fun onStart() {
+        _startButtonState.value = false
+        _stopButtonState.value = true
+        _clearButtonState.value = false
+
         tonight = SleepNight()
         insert(tonight)
     }
 
     fun onStop() {
+        _startButtonState.value = true
+        _stopButtonState.value = false
+        _clearButtonState.value = true
+
         tonight.endTimeMilli = System.currentTimeMillis()
         update(tonight)
+    }
+
+    fun onClear() {
+        _startButtonState.value = true
+        _stopButtonState.value = false
+        _clearButtonState.value = true
+
+        clear()
     }
 }

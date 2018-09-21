@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -69,19 +70,10 @@ class SleepTrackerFragment : Fragment() {
     }
 
     fun startSleep(view: View) {
-        binding.startButton.isEnabled = false
-        binding.stopButton.isEnabled = true
-        binding.clearButton.isEnabled = false
-
         sleepTrackerViewModel.onStart()
     }
 
     fun stopSleep(view: View) {
-
-        binding.startButton.isEnabled = true
-        binding.stopButton.isEnabled = false
-        binding.clearButton.isEnabled = true
-
         sleepTrackerViewModel.onStop()
 
         view.findNavController().navigate(
@@ -90,11 +82,11 @@ class SleepTrackerFragment : Fragment() {
     }
 
     fun clearSleep (view: View) {
-        binding.startButton.isEnabled = true
-        binding.stopButton.isEnabled = false
-        binding.clearButton.isEnabled = true
+        sleepTrackerViewModel.onClear()
 
-        sleepTrackerViewModel.clear()
-        binding.textview.text = getString(R.string.cleared_message)
+        Toast.makeText(
+                context, 
+                getString(R.string.cleared_message),
+                Toast.LENGTH_SHORT).show()
     }
 }
