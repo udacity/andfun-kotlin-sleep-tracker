@@ -1,0 +1,87 @@
+/*
+ * Copyright 2018, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.android.trackmysleepquality"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+}
+
+dependencies {
+
+    // Note for reviewers: So, if you put the number directly into the dependency,
+    // Android Studio will tell you if there is a new version. 
+    // It doesn't seem to do that when you use variables.
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Support libraries
+    implementation 'androidx.appcompat:appcompat:1.0.0-rc02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'com.google.android.material:material:1.0.0-rc02'
+
+    // Android KTX
+    implementation 'androidx.core:core-ktx:1.0.0-rc02'
+
+    // Room dependencies
+    implementation "androidx.room:room-runtime:2.0.0-rc01"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-rc02'
+    kapt "androidx.room:room-compiler:2.0.0-rc01"
+
+    // LiveData and ViewModel dependencies
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0-rc01"
+
+    // Coroutines for getting off the UI thread
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.0"
+
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05"
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05"
+}
+
+// Kotlin coroutines are still experimental in the 1.2 branch, this will allow us to use them in
+// our project
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
