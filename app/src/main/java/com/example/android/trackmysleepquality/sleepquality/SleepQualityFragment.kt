@@ -25,20 +25,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.databinding.FragmentQualityChooserBinding
+import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
 
 /**
- * Fragment that displays a list of clickable icons, each representing a sleep quality rating.
- * Once the user taps an icon, the quality is added to the current sleepNight and the
+ * Fragment that displays a list of clickable icons,
+ * each representing a sleep quality rating.
+ * Once the user taps an icon, the quality is set in the current sleepNight
+ * and the
  * database is updated.
  *
  */
 class SleepQualityFragment : Fragment() {
 
     private lateinit var sleepQualityViewModel: SleepQualityViewModel
-    private lateinit var binding: FragmentQualityChooserBinding
+    private lateinit var binding: FragmentSleepQualityBinding
 
-    var sleepNightKey = 0L
+    private var sleepNightKey = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -47,11 +49,10 @@ class SleepQualityFragment : Fragment() {
         sleepNightKey = SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
 
         binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_quality_chooser, container, false)
+                inflater, R.layout.fragment_sleep_quality, container, false)
 
-        // TODO: Add a comment that explains what this does, including activity!!
         sleepQualityViewModel =
-                ViewModelProviders.of(activity!!).get(SleepQualityViewModel::class.java)
+                ViewModelProviders.of(this).get(SleepQualityViewModel::class.java)
 
         setClickListeners()
         return binding.root

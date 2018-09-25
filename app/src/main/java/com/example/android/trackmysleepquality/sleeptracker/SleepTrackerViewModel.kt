@@ -41,7 +41,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         get() = parentJob + Dispatchers.IO
     private val scope = CoroutineScope(coroutineContext)
 
-    val database = getDatabase(application, scope)
+    val database = getDatabase(application)
 
     lateinit var tonight: SleepNight
     var nights: LiveData<List<SleepNight>>

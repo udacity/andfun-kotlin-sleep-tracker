@@ -18,7 +18,7 @@ fun setNights(textView: TextView, nights: List<SleepNight>?) {
            sb.append("\n\nStart:\t${convertLongToDateString(night.startTimeMilli)}\n")
            if (night.endTimeMilli != 0L) {
                sb.append("End:\t${convertLongToDateString(night.endTimeMilli)}\n")
-               sb.append("Quality:\t${convertNumericQualityToString(night.sleepQualty)}\n")
+               sb.append("Quality:\t${convertNumericQualityToString(night.sleepQuality)}\n")
                sb.append(
                        "Sleep Hours:Minutes:\t ${night.endTimeMilli.minus(night.startTimeMilli) / 360000} " +
                                ": ${night.endTimeMilli.minus(night.startTimeMilli) / 60000}\n\n")

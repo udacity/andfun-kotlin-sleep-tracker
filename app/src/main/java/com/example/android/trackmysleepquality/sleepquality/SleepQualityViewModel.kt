@@ -36,7 +36,7 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
         get() = parentJob + Dispatchers.IO
     private val scope = CoroutineScope(coroutineContext)
 
-    val database = SleepQualityDatabase.getDatabase(application, scope)
+    val database = SleepQualityDatabase.getDatabase(application)
 
     // TODO: Use different pattern?
     fun getNight(key: Long) = scope.async { database.sleepQualityDao().get(key) }
@@ -61,7 +61,7 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
                 R.id.quality_five_image -> quality = 5
             }
         }
-        tonight.sleepQualty = quality
+        tonight.sleepQuality = quality
 
         scope.launch {
             database.sleepQualityDao().update(tonight)

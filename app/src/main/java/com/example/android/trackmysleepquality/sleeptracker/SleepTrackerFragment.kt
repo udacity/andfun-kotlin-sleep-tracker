@@ -27,7 +27,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
-import kotlinx.android.synthetic.main.fragment_sleep_tracker.*
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -48,9 +47,9 @@ class SleepTrackerFragment : Fragment() {
                 inflater, R.layout.fragment_sleep_tracker, container, false)
 
         sleepTrackerViewModel =
-                ViewModelProviders.of(activity!!).get(SleepTrackerViewModel::class.java)
+                ViewModelProviders.of(this).get(SleepTrackerViewModel::class.java)
 
-        // To use the View Model with data binding, you have to explicitely
+        // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
