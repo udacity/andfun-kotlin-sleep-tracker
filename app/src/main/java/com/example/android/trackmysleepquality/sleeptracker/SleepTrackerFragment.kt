@@ -63,14 +63,9 @@ class SleepTrackerFragment : Fragment() {
 
     private fun setClickListeners() {
         binding.apply {
-            startButton.setOnClickListener { startSleep(it) }
             stopButton.setOnClickListener { stopSleep(it) }
             clearButton.setOnClickListener { clearSleep(it) }
         }
-    }
-
-    fun startSleep(view: View) {
-        sleepTrackerViewModel.onStart()
     }
 
     fun stopSleep(view: View) {

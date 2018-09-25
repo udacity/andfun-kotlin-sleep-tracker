@@ -29,7 +29,7 @@ import kotlinx.coroutines.experimental.CoroutineScope
 
 // TODO: This is copied from Florina's reviewed Room Kotlin codelab. Add comments.
 
-@Database(entities = [SleepNight::class], version = 12)
+@Database(entities = [SleepNight::class], version = 12, exportSchema = false)
 abstract class SleepQualityDatabase : RoomDatabase() {
 
     abstract fun sleepQualityDao() : SleepQualityDao
