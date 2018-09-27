@@ -71,7 +71,7 @@ class SleepQualityFragment : Fragment() {
         }
     }
 
-    private fun setSleepQuality(view: View) {
+    fun setSleepQuality(view: View) {
        sleepQualityViewModel.setSleepQuality(sleepNightKey, view.id)
 
         view.findNavController().navigate(

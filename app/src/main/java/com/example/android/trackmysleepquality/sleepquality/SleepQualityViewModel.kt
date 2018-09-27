@@ -30,24 +30,53 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 class SleepQualityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var parentJob = Job()
+    // We need a job for our coroutines
+    private val viewModelJob = Job()
 
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.IO
-    private val scope = CoroutineScope(coroutineContext)
+    // We need a scope to run in, because we don't want to run this on the
+    // UI thread. IO is a threadpool for running operations that are not directly
+    // UI related.
+    private val scope = CoroutineScope(Dispatchers.IO +  viewModelJob)
 
+    // Our trusty Room database.
     val database = SleepQualityDatabase.getDatabase(application)
 
-    // TODO: Use different pattern?
+    /**
+     * Cancel all coroutines when the ViewModel is cleared, so that we
+     * don't end up with dangling coroutines. onCleared() gets called when the
+     * ViewModel is destroyed.
+     */
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    // TODO: I don't think this is right.
+    // I am pretty sure this is not the way to do this, but I don't know
+    // how to do it right (and keep it simple as this is the introduction of
+    // coroutines, and there is already so much in this lesson. ]
+    //
+    // 1. How do I do this (without acrobatics) to not use async, which I think oyou
+    //    say not to use.
+    // 2. How do I write all of this as one function, or as some statements inside
+    //    setSleepQuality?
+    //
     fun getNight(key: Long) = scope.async { database.sleepQualityDao().get(key) }
 
     fun get(key: Long): SleepNight = runBlocking {
         getNight(key).await()
     }
 
+    /**
+     * 1. Get the Night that we need to update. We can't continue until we
+     *    have that night, wo we need to wait for it.
+     * 2. Determine the sleep quality. NOTE: This code will be moved into the
+     *    fragment and the quality will be passed in.
+     * 3. Launch a coroutine to update the database.
+     */
     fun setSleepQuality(sleepNightKey: Long, viewId: Int) {
 
-        var tonight = get(sleepNightKey)
+        val tonight = get(sleepNightKey)
 
         var quality = 3 // Easy default
 

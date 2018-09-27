@@ -46,8 +46,8 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
     lateinit var tonight: SleepNight
     var nights: LiveData<List<SleepNight>>
 
-    // For keeping the button states in the ViewModel
-    // TODO: I don't understand the pattern used here to add the required getter
+    // To keep others from changing this MutableLiveData, we make it private and
+    // expose a read-only LiveData to the outside world.
     private val _startButtonState = MutableLiveData<Boolean>()
     val startButtonState: LiveData<Boolean>
         get() = _startButtonState
