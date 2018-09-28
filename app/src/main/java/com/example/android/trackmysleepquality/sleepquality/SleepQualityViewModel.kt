@@ -18,28 +18,44 @@ package com.example.android.trackmysleepquality.sleepquality
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.SleepNight
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.android.trackmysleepquality.Event
 import com.example.android.trackmysleepquality.database.SleepQualityDatabase
-import kotlinx.coroutines.experimental.*
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 
 /**
  * ViewModel for SleepQualityFragment.
  */
-
 class SleepQualityViewModel(application: Application) : AndroidViewModel(application) {
 
-    // We need a job for our coroutines
+    /**  Database related variables. */
+
+    // Our trusty Room database.
+    val database = SleepQualityDatabase.getDatabase(application)
+
+    // The key of the current night we are working on.
+    // Set when we create the fragment from the fragment arguments.
+    var sleepNightKey = 0L
+
+    /** Coroutine setup variables */
+
+    // We need a job for our coroutines. The job has references to all coroutines.
     private val viewModelJob = Job()
 
     // We need a scope to run in, because we don't want to run this on the
     // UI thread. IO is a threadpool for running operations that are not directly
     // UI related.
-    private val scope = CoroutineScope(Dispatchers.IO +  viewModelJob)
+    private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    // Our trusty Room database.
-    val database = SleepQualityDatabase.getDatabase(application)
+    // Variable that tells the Event whether it should navigate to SleepTrackerFragment.
+    private val _navigateToSleepTrackerEvent = MutableLiveData<Event<Boolean>>()
+    val navigateToSleepTrackerEvent: LiveData<Event<Boolean>>
+        get() = _navigateToSleepTrackerEvent
 
     /**
      * Cancel all coroutines when the ViewModel is cleared, so that we
@@ -51,49 +67,25 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
         viewModelJob.cancel()
     }
 
-    // TODO: I don't think this is right.
-    // I am pretty sure this is not the way to do this, but I don't know
-    // how to do it right (and keep it simple as this is the introduction of
-    // coroutines, and there is already so much in this lesson. ]
-    //
-    // 1. How do I do this (without acrobatics) to not use async, which I think oyou
-    //    say not to use.
-    // 2. How do I write all of this as one function, or as some statements inside
-    //    setSleepQuality?
-    //
-    fun getNight(key: Long) = scope.async { database.sleepQualityDao().get(key) }
-
-    fun get(key: Long): SleepNight = runBlocking {
-        getNight(key).await()
+    fun setSleepQualtiy(quality: Int) {
+        // Launch a coroutine to update the night in the database.
+        scope.launch {
+            val tonight = database.sleepQualityDao().get(sleepNightKey)
+            tonight.sleepQuality = quality
+            database.sleepQualityDao().update(tonight)
+        }
     }
 
     /**
-     * 1. Get the Night that we need to update. We can't continue until we
-     *    have that night, wo we need to wait for it.
-     * 2. Determine the sleep quality. NOTE: This code will be moved into the
-     *    fragment and the quality will be passed in.
-     * 3. Launch a coroutine to update the database.
+     * Sets the sleep quality and updates the database.
+     * Then navigates back to the SleepTrackerFragment.
      */
-    fun setSleepQuality(sleepNightKey: Long, viewId: Int) {
+    fun onSetSleepQuality(quality: Int) {
 
-        val tonight = get(sleepNightKey)
+        setSleepQualtiy(quality)
 
-        var quality = 3 // Easy default
-
-        if (-1 != viewId) {
-            when (viewId) {
-                R.id.quality_zero_image -> quality = 0
-                R.id.quality_one_image -> quality = 1
-                R.id.quality_two_image -> quality = 2
-                R.id.quality_three_image -> quality = 3
-                R.id.quality_four_image -> quality = 4
-                R.id.quality_five_image -> quality = 5
-            }
-        }
-        tonight.sleepQuality = quality
-
-        scope.launch {
-            database.sleepQualityDao().update(tonight)
-        }
+        // Navigate back to the SleepTracker Fragment using the Event pattern.
+        // Setting this variable to true will alert the observer and trigger navigation.
+        _navigateToSleepTrackerEvent.value = Event<Boolean>(true)
     }
 }

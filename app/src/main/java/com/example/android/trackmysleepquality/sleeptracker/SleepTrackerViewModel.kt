@@ -20,99 +20,150 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.android.trackmysleepquality.Event
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.database.SleepQualityDatabase.Companion.getDatabase
-import kotlinx.coroutines.experimental.*
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 import kotlin.coroutines.experimental.CoroutineContext
 
 /**
  * ViewModel for SleepTrackerFragment.
  */
-
 class SleepTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
-
-    private var parentJob = Job()
-
-    // TODO: @Sean: Is this correct?
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.IO
-    private val scope = CoroutineScope(coroutineContext)
+    /**  Database related variables. */
 
     val database = getDatabase(application)
 
     lateinit var tonight: SleepNight
     var nights: LiveData<List<SleepNight>>
 
-    // To keep others from changing this MutableLiveData, we make it private and
-    // expose a read-only LiveData to the outside world.
-    private val _startButtonState = MutableLiveData<Boolean>()
-    val startButtonState: LiveData<Boolean>
-        get() = _startButtonState
+    /** Coroutine setup variables */
 
-    private val _stopButtonState = MutableLiveData<Boolean>()
-    val stopButtonState: LiveData<Boolean>
-        get() = _stopButtonState
+    // We need a job for our coroutines. The job has references to all coroutines.
+    private var parentJob = Job()
 
-    private val _clearButtonState = MutableLiveData<Boolean>()
-    val clearButtonState: LiveData<Boolean>
-        get() = _clearButtonState
+    // Create the scope for our coroutines.
+    // Since we don't need to run on the UI thread, use the IO thread pool.
+    private val coroutineContext: CoroutineContext
+        get() = parentJob + Dispatchers.IO
+    private val scope = CoroutineScope(coroutineContext)
+
+
+    /**
+     * Using backing properties for button states.
+     * This is a pattern you can copy and adapt.
+     * To keep others from changing this MutableLiveData, we make it private and
+     * expose a read-only LiveData to the outside world.
+     */
+
+    private val _startButtonVisibilityState = MutableLiveData<Boolean>()
+    val startButtonVisibilityState: LiveData<Boolean>
+        get() = _startButtonVisibilityState
+
+    private val _stopButtonVisibilityState = MutableLiveData<Boolean>()
+    val stopButtonVisibilityState: LiveData<Boolean>
+        get() = _stopButtonVisibilityState
+
+    private val _clearButtonVisibilityState = MutableLiveData<Boolean>()
+    val clearButtonVisibilityState: LiveData<Boolean>
+        get() = _clearButtonVisibilityState
+
+    /** Using events (Event class + LiveData + Observers in Fragment)
+     * to trigger UI actions in the Fragment.
+     */
+
+    // Variable that tells the Event whether it should show the toast.
+    private val _showToastEvent = MutableLiveData<Event<Boolean>>()
+    val showToastEvent: LiveData<Event<Boolean>>
+        get() = _showToastEvent
+
+    // Variable that tells the Event whether it should navigate to SleepQualityFragment.
+    private val _navigateToSleepQualityEvent = MutableLiveData<Event<Boolean>>()
+    val navigateToSleepQualityEvent: LiveData<Event<Boolean>>
+        get() = _navigateToSleepQualityEvent
+
+    /** Initialization */
 
     init {
+        // Get all the nights from the database and cache them.
         nights = database.sleepQualityDao().getAllNights()
 
-        _startButtonState.value = true
-        _stopButtonState.value = false
-        _clearButtonState.value = true
+        // Set the initial button visibilities.
+        _startButtonVisibilityState.value = true
+        _stopButtonVisibilityState.value = false
+        _clearButtonVisibilityState.value = true
     }
 
-    fun insert(night: SleepNight) =
-            scope.launch {
-                database.sleepQualityDao().insert(night)
-            }
+    /** Functions that launch the coroutines for database operations. */
 
-    fun update(night: SleepNight) =
-            scope.launch {
-                database.sleepQualityDao().update(night)
-            }
+    // Launch a coroutine to insert the supplied night into the database.
+    fun insert(night: SleepNight) = scope.launch {
+        database.sleepQualityDao().insert(night)
+    }
 
-    fun clear() =
-            scope.launch {
-                database.sleepQualityDao().clear()
-            }
+    // Launch a coroutine to update the provided night.
+    fun update(night: SleepNight) = scope.launch {
+        database.sleepQualityDao().update(night)
+    }
 
+    // Launch a coroutine to clear the database table.
+    fun clear() = scope.launch {
+        database.sleepQualityDao().clear()
+    }
+
+    // Called when the ViewModel is dismantled. At this point, we want to cancel all coroutines;
+    // otherwise we end up with processes that have nowhere to return to using memory and resources.
     override fun onCleared() {
         super.onCleared()
         parentJob.cancel()
     }
 
-    /** Methods for buttons presses **/
+    /** Methods for buttons presses */
 
+    // Called when the START button is clicked.
     fun onStart() {
-        _startButtonState.value = false
-        _stopButtonState.value = true
-        _clearButtonState.value = false
+        // Change button visibility.
+        _startButtonVisibilityState.value = false
+        _stopButtonVisibilityState.value = true
+        _clearButtonVisibilityState.value = false
 
+        // Create a new night, which captures the current time, and insert it into the database.
         tonight = SleepNight()
         insert(tonight)
     }
 
+    // Called when the STOP button is clicked.
     fun onStop() {
-        _startButtonState.value = true
-        _stopButtonState.value = false
-        _clearButtonState.value = true
+        // Change button visibility.
+        _startButtonVisibilityState.value = true
+        _stopButtonVisibilityState.value = false
+        _clearButtonVisibilityState.value = true
 
+        // Update the night in the database to add the end time.
         tonight.endTimeMilli = System.currentTimeMillis()
         update(tonight)
+
+        // Navigate to the SleepQualityFragment to collect a quality rating.
+        _navigateToSleepQualityEvent.value = Event<Boolean>(true)
     }
 
+    // Called when the CLEAR button is clicked.
     fun onClear() {
-        _startButtonState.value = true
-        _stopButtonState.value = false
-        _clearButtonState.value = true
 
+        // Set the button visibility.
+        _startButtonVisibilityState.value = true
+        _stopButtonVisibilityState.value = false
+        _clearButtonVisibilityState.value = true
+
+        // Clear the database table.
         clear()
+
+        // Show a toast because it's friendly to let users know.
+        _showToastEvent.value = Event<Boolean>(true)
     }
 }

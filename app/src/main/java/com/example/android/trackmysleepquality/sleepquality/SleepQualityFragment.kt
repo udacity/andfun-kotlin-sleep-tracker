@@ -22,8 +22,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
 
@@ -37,44 +38,42 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityB
  */
 class SleepQualityFragment : Fragment() {
 
+    // Variables to hold references for our ViewModel and Binding Object.
     private lateinit var sleepQualityViewModel: SleepQualityViewModel
     private lateinit var binding: FragmentSleepQualityBinding
-
-    private var sleepNightKey = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        // TODO(Dan): Does this go here or Lyla wonders onActivityCreated?
-        sleepNightKey = SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
-
+        // Get a reference to the binding object and inflate the fragment views.
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_quality, container, false)
 
+        // Get a reference to the ViewModel associated with this fragment.
         sleepQualityViewModel =
                 ViewModelProviders.of(this).get(SleepQualityViewModel::class.java)
 
-        setClickListeners()
+        // DO NOT FORGET THIS!!!
+        // To use the View Model with data binding, you have to explicitly
+        // give the binding object a reference to it.
+        binding.sleepQualityViewModel = sleepQualityViewModel
+
+        // Add an Observer on the Event for Navigating when a Quality button is pressed.
+        // The Event takes care of making sure the navigation is only called once.
+        sleepQualityViewModel.navigateToSleepTrackerEvent.observe(this, Observer {
+            it.getContentIfNotHandled()?.let {
+                // Only proceed if the event has never been handled
+                this.findNavController().navigate(
+                        SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
+            }
+        })
+
+        // We need to make this value available to the ViewModel.
+        // TODO: Is this the correct way of doing this?
+        // TODO: Would it be better to create an additional shared ViewModel to hold just this data?
+        sleepQualityViewModel.sleepNightKey =
+                SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
+
         return binding.root
-    }
-
-    /**
-     * Attaches listeners to all the views.
-     */
-    private fun setClickListeners() {
-        val clickableViews: List<View> =
-                listOf(binding.qualityOneImage, binding.qualityTwoImage, binding.qualityThreeImage,
-                        binding.qualityFourImage, binding.qualityFiveImage, binding.qualityZeroImage)
-
-        for (item in clickableViews) {
-            item.setOnClickListener { setSleepQuality(it) }
-        }
-    }
-
-    fun setSleepQuality(view: View) {
-       sleepQualityViewModel.setSleepQuality(sleepNightKey, view.id)
-
-        view.findNavController().navigate(
-                SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
     }
 }

@@ -24,4 +24,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="buttonStyle">
+        <item name="android:background">@color/button_color</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">#fafafa</item>
+    </style>
+
 </resources>

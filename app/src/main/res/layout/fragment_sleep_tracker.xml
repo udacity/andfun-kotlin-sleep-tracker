@@ -19,6 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="sleepTrackerViewModel"
             type="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel" />
@@ -45,8 +46,8 @@
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                app:nights="@{sleepTrackerViewModel.nights}"
-            />
+                android:fontFamily="@font/roboto"
+                app:nights="@{sleepTrackerViewModel.nights}" />
         </ScrollView>
 
         <Button
@@ -54,12 +55,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"
+            android:background="@color/button_color"
+            android:enabled="@{sleepTrackerViewModel.startButtonVisibilityState}"
+            android:fontFamily="@font/roboto"
+            android:onClick="@{() -> sleepTrackerViewModel.onStart()}"
             android:text="@string/start"
+            android:textColor="@color/button_text_color"
             app:layout_constraintBaseline_toBaselineOf="@id/stop_button"
             app:layout_constraintEnd_toStartOf="@+id/stop_button"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
-            android:enabled="@{sleepTrackerViewModel.startButtonState}"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/stop_button"
@@ -67,24 +72,30 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
+            android:background="@color/button_color"
+            android:enabled="@{sleepTrackerViewModel.stopButtonVisibilityState}"
+            android:onClick="@{() -> sleepTrackerViewModel.onStop()}"
             android:text="@string/stop"
+            android:textColor="@color/button_text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/start_button"
-            app:layout_constraintTop_toTopOf="parent"
-            android:enabled="@{sleepTrackerViewModel.stopButtonState}"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/clear_button"
+            style="@style/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginBottom="@dimen/margin"
+            android:enabled="@{sleepTrackerViewModel.clearButtonVisibilityState}"
+            android:onClick="@{() -> sleepTrackerViewModel.onClear()}"
             android:text="@string/clear"
+            android:textColor="@color/button_text_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:enabled="@{sleepTrackerViewModel.clearButtonState}" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

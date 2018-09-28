@@ -20,20 +20,26 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlinx.coroutines.experimental.CoroutineScope
 
 /**
  * A database that stores SleepNight information.
  * And a global method to get access to the database.
+ *
+ * This pattern is pretty much the same for any database,
+ * so you can reuse it.
  */
 @Database(entities = [SleepNight::class], version = 1, exportSchema = false)
 abstract class SleepQualityDatabase : RoomDatabase() {
 
-    abstract fun sleepQualityDao() : SleepQualityDao
+    // Connect the database to the DAO.
+    abstract fun sleepQualityDao(): SleepQualityDao
 
+    // Singleton pattern.
+    // If we already have a database, return it, otherwise, create an instance.
     companion object {
         @Volatile
         private var INSTANCE: SleepQualityDatabase? = null
+
         fun getDatabase(
                 context: Context
         ): SleepQualityDatabase {
