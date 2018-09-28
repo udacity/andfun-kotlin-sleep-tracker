@@ -8,7 +8,7 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="sleepQualityFragment">
+                  <entry key="sleep_quality_fragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
@@ -29,7 +29,7 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="sleepTrackerFragment">
+                  <entry key="sleep_tracker_fragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
