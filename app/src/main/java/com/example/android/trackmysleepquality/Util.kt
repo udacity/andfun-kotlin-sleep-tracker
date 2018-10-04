@@ -24,7 +24,7 @@ fun convertNumericQualityToString(quality: Int, context: Context): String {
     when (quality) {
         0 -> qualityString = context.getString(R.string.zero_very_bad)
         1 -> qualityString = context.getString(R.string.one_poor)
-        2 -> qualityString = context.getString(R.string.four_pretty_good)
+        2 -> qualityString = context.getString(R.string.two_soso)
         3 -> qualityString = context.getString(R.string.three_ok)
         4 -> qualityString = context.getString(R.string.four_pretty_good)
         5 -> qualityString = context.getString(R.string.five_excellent)
@@ -33,7 +33,7 @@ fun convertNumericQualityToString(quality: Int, context: Context): String {
 }
 
 fun convertLongToDateString(systemTime: Long): String {
-    return SimpleDateFormat("yyyy-MM-dd' Time: 'HH:mm")
+    return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
             .format(systemTime).toString()
 }
 

@@ -23,7 +23,7 @@ buildscript {
         archLifecycleVersion = '1.1.1'
         room_version = '2.0.0-rc01'
         coroutine_version = '0.26.0'
-        gradleVersion = '3.3.0-alpha11'
+        gradleVersion = '3.3.0-alpha13'
         navigationVersion = '1.0.0-alpha06'
         supportlibVersion = '1.0.0'
         dataBindingCompilerVersion = gradleVersion // Always need to be the same.

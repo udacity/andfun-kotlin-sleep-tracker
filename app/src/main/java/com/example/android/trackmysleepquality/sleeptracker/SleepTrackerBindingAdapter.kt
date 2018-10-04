@@ -16,6 +16,7 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
+import android.text.Html
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.android.trackmysleepquality.R
@@ -46,23 +47,26 @@ fun setNights(textView: TextView, nights: List<SleepNight>?) {
             nights.forEach {
                 append("\n\n")
                 append(context.getString(R.string.start_time))
-                append("\t${convertLongToDateString(it.startTimeMilli)}\n")
+                append("\t${convertLongToDateString(it.startTimeMilli)}<br>")
                 if (it.endTimeMilli != 0L) {
                     append(context.getString(R.string.end_time))
-                    append("\t${convertLongToDateString(it.endTimeMilli)}\n")
+                    append("\t${convertLongToDateString(it.endTimeMilli)}<br>")
                     append(context.getString(R.string.quality))
-                    append("\t${convertNumericQualityToString(it.sleepQuality, context)}\n")
+                    append("\t${convertNumericQualityToString(it.sleepQuality, context)}<br>")
                     append(context.getString(R.string.hours_slept))
                     // Hours
                     append("\t ${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60 / 60}:")
                     // Minutes
                     append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60}:")
                     // Seconds
-                    append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000}")
+                    append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000}<br><br>")
                 }
             }
         }
-        textView.text = sb.toString()
+        // fromHtml is deprecated for target API without a flag, but since our minSDK is 19, we
+        // can't use the newer version, which requires minSDK of 24
+        //https://developer.android.com/reference/android/text/Html#fromHtml(java.lang.String,%20int)
+        textView.setText(Html.fromHtml(sb.toString()));
     }
 }
 

@@ -31,7 +31,9 @@ import kotlinx.coroutines.experimental.launch
 /**
  * ViewModel for SleepQualityFragment.
  */
-class SleepQualityViewModel(application: Application) : AndroidViewModel(application) {
+class SleepQualityViewModel(
+        sleepNightKey: Long = 0L,
+        application: Application ) : AndroidViewModel(application) {
 
     /**  Database related variables. */
 
@@ -40,7 +42,7 @@ class SleepQualityViewModel(application: Application) : AndroidViewModel(applica
 
     // The key of the current night we are working on.
     // Set when we create the fragment from the fragment arguments.
-    var sleepNightKey = 0L
+    private var sleepNightKey = sleepNightKey
 
     /** Coroutine setup variables */
 

@@ -16,10 +16,13 @@
 
 package com.example.android.trackmysleepquality.sleepquality
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -40,6 +43,8 @@ class SleepQualityFragment : Fragment() {
 
     // Variables to hold references for our ViewModel and Binding Object.
     private lateinit var sleepQualityViewModel: SleepQualityViewModel
+    private lateinit var viewModelFactory: SleepQualityViewModelFactory
+
     private lateinit var binding: FragmentSleepQualityBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +53,9 @@ class SleepQualityFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_quality, container, false)
+
+        viewModelFactory = SleepQualityViewModelFactory(
+                SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey)
 
         // Get a reference to the ViewModel associated with this fragment.
         sleepQualityViewModel =
@@ -71,8 +79,8 @@ class SleepQualityFragment : Fragment() {
         // We need to make this value available to the ViewModel.
         // TODO: Is this the correct way of doing this?
         // TODO: Would it be better to create an additional shared ViewModel to hold just this data?
-        sleepQualityViewModel.sleepNightKey =
-                SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
+       // sleepQualityViewModel.sleepNightKey =
+       //         SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
 
         return binding.root
     }

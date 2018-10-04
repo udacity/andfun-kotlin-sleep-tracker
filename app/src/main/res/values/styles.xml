@@ -18,16 +18,16 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="buttonStyle">
-        <item name="android:background">@color/button_color</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textColor">#fafafa</item>
+    <style name="SleepButtons" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/white_text_color</item>
+        <item name="colorAccent">@color/selected_green_color</item>
+        <item name="colorControlHighlight">@color/selected_green_color</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

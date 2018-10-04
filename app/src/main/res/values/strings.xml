@@ -33,18 +33,19 @@
     <string name="quality_5">Sleep Quality 5</string>
 
     <!-- output to textview -->
-    <string name="title">HERE IS YOUR SLEEP DATA</string>
-    <string name="start_time">Start:</string>
-    <string name="end_time">End:</string>
-    <string name="quality">Quality:</string>
-    <string name="hours_slept">Hours:</string>
+    <string name="title"><![CDATA[<h3>HERE IS YOUR SLEEP DATA</h3>]]></string>
+    <string name="start_time"><![CDATA[<b>Start:</b>]]></string>
+    <string name="end_time"><![CDATA[<b>End:</b>]]></string>
+    <string name="quality"><![CDATA[<b>Quality:</b>]]></string>
+    <string name="hours_slept"><![CDATA[<b>Hours:Minutes:Seconds</b>]]></string>
 
     <!-- sleep quality -->
-    <string name="zero_very_bad">0 - Very bad</string>
-    <string name="one_poor">1 - Poor</string>
-    <string name="three_ok">3 - OK</string>
-    <string name="four_pretty_good">4 - Pretty good</string>
-    <string name="five_excellent">5 - Excellent!</string>
+    <string name="zero_very_bad">Very bad</string>
+    <string name="one_poor">Poor</string>
+    <string name="two_soso">So-so</string>
+    <string name="three_ok">OK</string>
+    <string name="four_pretty_good">Pretty good</string>
+    <string name="five_excellent">Excellent!</string>
 
     <!-- cleared toast -->
     <string name="cleared_message">All your data is gone forever.</string>

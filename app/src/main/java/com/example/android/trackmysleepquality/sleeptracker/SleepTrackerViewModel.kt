@@ -158,7 +158,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         // Set the button visibility.
         _startButtonVisibilityState.value = true
         _stopButtonVisibilityState.value = false
-        _clearButtonVisibilityState.value = true
+        _clearButtonVisibilityState.value = false
 
         // Clear the database table.
         clear()
