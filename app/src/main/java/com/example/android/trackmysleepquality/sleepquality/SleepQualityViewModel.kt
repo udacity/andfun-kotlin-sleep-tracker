@@ -20,7 +20,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.android.trackmysleepquality.Event
+//import com.example.android.trackmysleepquality.Event
 import com.example.android.trackmysleepquality.database.SleepQualityDatabase
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
@@ -40,6 +40,7 @@ class SleepQualityViewModel(
     // Our trusty Room database.
     val database = SleepQualityDatabase.getDatabase(application)
 
+
     // The key of the current night we are working on.
     // Set when we create the fragment from the fragment arguments.
     private var sleepNightKey = sleepNightKey
@@ -55,9 +56,11 @@ class SleepQualityViewModel(
     private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     // Variable that tells the Event whether it should navigate to SleepTrackerFragment.
-    private val _navigateToSleepTrackerEvent = MutableLiveData<Event<Boolean>>()
-    val navigateToSleepTrackerEvent: LiveData<Event<Boolean>>
+    private val _navigateToSleepTrackerEvent = MutableLiveData<Boolean>()
+    val navigateToSleepTrackerEvent: LiveData<Boolean>
         get() = _navigateToSleepTrackerEvent
+    fun doneNavigating() {_navigateToSleepTrackerEvent.value = false}
+
 
     /**
      * Cancel all coroutines when the ViewModel is cleared, so that we
@@ -88,6 +91,6 @@ class SleepQualityViewModel(
 
         // Navigate back to the SleepTracker Fragment using the Event pattern.
         // Setting this variable to true will alert the observer and trigger navigation.
-        _navigateToSleepTrackerEvent.value = Event<Boolean>(true)
+        _navigateToSleepTrackerEvent.value = true
     }
 }

@@ -20,6 +20,7 @@ import android.text.Html
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality._convertNumericQualityToString
 import com.example.android.trackmysleepquality.convertLongToDateString
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
@@ -52,7 +53,7 @@ fun setNights(textView: TextView, nights: List<SleepNight>?) {
                     append(context.getString(R.string.end_time))
                     append("\t${convertLongToDateString(it.endTimeMilli)}<br>")
                     append(context.getString(R.string.quality))
-                    append("\t${convertNumericQualityToString(it.sleepQuality, context)}<br>")
+                    append("\t${_convertNumericQualityToString(it.sleepQuality, context)}<br>")
                     append(context.getString(R.string.hours_slept))
                     // Hours
                     append("\t ${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60 / 60}:")

@@ -55,11 +55,12 @@ class SleepQualityFragment : Fragment() {
                 inflater, R.layout.fragment_sleep_quality, container, false)
 
         viewModelFactory = SleepQualityViewModelFactory(
-                SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey)
+                SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey,
+                this.activity!!.application)
 
         // Get a reference to the ViewModel associated with this fragment.
         sleepQualityViewModel =
-                ViewModelProviders.of(this).get(SleepQualityViewModel::class.java)
+                ViewModelProviders.of(this, viewModelFactory).get(SleepQualityViewModel::class.java)
 
         // DO NOT FORGET THIS!!!
         // To use the View Model with data binding, you have to explicitly
@@ -69,11 +70,14 @@ class SleepQualityFragment : Fragment() {
         // Add an Observer on the Event for Navigating when a Quality button is pressed.
         // The Event takes care of making sure the navigation is only called once.
         sleepQualityViewModel.navigateToSleepTrackerEvent.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {
+           // it.getContentIfNotHandled()?.let {
                 // Only proceed if the event has never been handled
+            if (it) {
                 this.findNavController().navigate(
                         SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
+                sleepQualityViewModel.doneNavigating()
             }
+            // }
         })
 
         // We need to make this value available to the ViewModel.
@@ -81,6 +85,7 @@ class SleepQualityFragment : Fragment() {
         // TODO: Would it be better to create an additional shared ViewModel to hold just this data?
        // sleepQualityViewModel.sleepNightKey =
        //         SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
+        // That's what the FACTORY IS FOR!
 
         return binding.root
     }

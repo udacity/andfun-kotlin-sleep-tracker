@@ -24,7 +24,7 @@ package com.example.android.trackmysleepquality
  *
  * https://gist.githubusercontent.com/JoseAlcerreca/5b661f1800e1e654f07cc54fe87441af/raw/d1d9ad561c16f4d04367424ac5f5b305ba691852/Event.kt
  */
-open class Event<out T>(private val content: T) {
+/** open class Event<out T>(private val content: T) {
 
     var hasBeenHandled = false
         private set // Allow external read but not write
@@ -46,3 +46,4 @@ open class Event<out T>(private val content: T) {
      */
     fun peekContent(): T = content
 }
+*/

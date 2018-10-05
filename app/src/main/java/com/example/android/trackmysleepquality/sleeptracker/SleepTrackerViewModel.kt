@@ -17,12 +17,21 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
+import android.content.Context
+import android.text.Html
+import android.text.Spanned
+import androidx.core.text.toSpanned
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.android.trackmysleepquality.Event
+import androidx.lifecycle.Transformations
+//import com.example.android.trackmysleepquality.Event
+import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.convertLongToDateString
+import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.database.SleepQualityDatabase.Companion.getDatabase
+import com.example.android.trackmysleepquality.formatNights
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
@@ -41,6 +50,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
 
     lateinit var tonight: SleepNight
     var nights: LiveData<List<SleepNight>>
+    lateinit var nightsString: LiveData<Spanned>
 
     /** Coroutine setup variables */
 
@@ -73,25 +83,30 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
     val clearButtonVisibilityState: LiveData<Boolean>
         get() = _clearButtonVisibilityState
 
+
     /** Using events (Event class + LiveData + Observers in Fragment)
      * to trigger UI actions in the Fragment.
      */
 
     // Variable that tells the Event whether it should show the toast.
-    private val _showToastEvent = MutableLiveData<Event<Boolean>>()
-    val showToastEvent: LiveData<Event<Boolean>>
+    private var _showToastEvent = MutableLiveData<Boolean>()
+    val showToastEvent: LiveData<Boolean>
         get() = _showToastEvent
+    fun doneShowingToast() {_showToastEvent.value = false}
 
     // Variable that tells the Event whether it should navigate to SleepQualityFragment.
-    private val _navigateToSleepQualityEvent = MutableLiveData<Event<Boolean>>()
-    val navigateToSleepQualityEvent: LiveData<Event<Boolean>>
+    private val _navigateToSleepQualityEvent = MutableLiveData<Boolean>()
+    val navigateToSleepQualityEvent: LiveData<Boolean>
         get() = _navigateToSleepQualityEvent
+    fun doneNavigating() {_navigateToSleepQualityEvent.value = false}
+
 
     /** Initialization */
 
     init {
         // Get all the nights from the database and cache them.
         nights = database.sleepQualityDao().getAllNights()
+        nightsString =  Transformations.map(nights, {nights -> formatNights(nights, getApplication())})
 
         // Set the initial button visibilities.
         _startButtonVisibilityState.value = true
@@ -149,7 +164,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         update(tonight)
 
         // Navigate to the SleepQualityFragment to collect a quality rating.
-        _navigateToSleepQualityEvent.value = Event<Boolean>(true)
+        _navigateToSleepQualityEvent.value = true
     }
 
     // Called when the CLEAR button is clicked.
@@ -164,6 +179,6 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         clear()
 
         // Show a toast because it's friendly to let users know.
-        _showToastEvent.value = Event<Boolean>(true)
+        _showToastEvent.value = true
     }
 }

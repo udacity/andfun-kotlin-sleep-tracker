@@ -67,23 +67,25 @@ class SleepTrackerFragment : Fragment() {
         // The Event takes care of making sure the toast is only shown once, even if the device
         // has a configuration change.
         sleepTrackerViewModel.showToastEvent.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {
+            if (it) {
                 // Only proceed if the event has never been handled
                 Toast.makeText(
                         context,
                         getString(R.string.cleared_message),
                         Toast.LENGTH_SHORT).show()
+                sleepTrackerViewModel.doneShowingToast()
             }
         })
 
         // Add an Observer on the Event for Navigating when the Stop button is pressed.
         // The Event takes care of making sure the navigation is only called once.
         sleepTrackerViewModel.navigateToSleepQualityEvent.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {
+            if (it) {
                 // Only proceed if the event has never been handled
                 binding.stopButton.findNavController().navigate(
                         SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(
                                 sleepTrackerViewModel.tonight.startTimeMilli))
+                sleepTrackerViewModel.doneNavigating()
             }
         })
 

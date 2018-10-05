@@ -19,7 +19,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="sleepTrackerViewModel"
             type="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel" />
@@ -46,9 +45,10 @@
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                app:nights="@{sleepTrackerViewModel.nights}"
-                style="@style/TextStyle" />
+                android:text="@{sleepTrackerViewModel.nightsString}" />
         </ScrollView>
+
+        <!-- With Adapter: app:nights="@{sleepTrackerViewModel.nights}"  -->
 
         <Button
             android:id="@+id/start_button"
