@@ -14,17 +14,21 @@
   ~ limitations under the License.
   -->
 
+<!-- Wrapping the layout into /layout to make it available with data binding. -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Data to make available to the XML via data binding. In this case,
+     the whole ViewModel, so that we can access the LiveData,
+     click handlers, and state variables. -->
     <data>
-
         <variable
             name="sleepQualityViewModel"
             type="com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel" />
     </data>
 
+    <!-- Start of the visible fragment layout using ConstraintLayout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +41,6 @@
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/margin"
             android:layout_marginBottom="@dimen/triple_margin"
-            android:contentDescription="How was your sleep? "
             android:fontFamily="@font/roboto"
             android:text="@string/how_was_hour_sleep"
             android:textSize="@dimen/title_text_size"

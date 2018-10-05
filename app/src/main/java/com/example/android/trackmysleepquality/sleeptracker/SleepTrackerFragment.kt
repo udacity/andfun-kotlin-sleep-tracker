@@ -16,12 +16,10 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
-import android.annotation.TargetApi
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,6 +28,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -60,35 +59,34 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         // Specify the current activity as the lifecycle owner of the binding.
-        // This is used so that the binding can observe LiveData updates
+        // This is necessary so that the binding can observe LiveData updates.
         binding.setLifecycleOwner(this)
 
-        // Add an Observer on the Event for showing a Toast when the clear button is pressed.
-        // The Event takes care of making sure the toast is only shown once, even if the device
-        // has a configuration change.
+        // Add an Observer on the state variable for showing a Toast when CLEAR button is pressed.
         sleepTrackerViewModel.showToastEvent.observe(this, Observer {
-            if (it) {
-                // Only proceed if the event has never been handled
-                Toast.makeText(
-                        context,
+            if (it) { // Observed state is true.
+                Snackbar.make(
+                        activity!!.findViewById(android.R.id.content),
                         getString(R.string.cleared_message),
-                        Toast.LENGTH_SHORT).show()
+                        Snackbar.LENGTH_SHORT // How long to display the message.
+                ).show()
+                // Reset state to make sure the toast is only shown once, even if the device
+                // has a configuration change.
                 sleepTrackerViewModel.doneShowingToast()
             }
         })
 
-        // Add an Observer on the Event for Navigating when the Stop button is pressed.
-        // The Event takes care of making sure the navigation is only called once.
+        // Add an Observer on the state varioable for Navigating when STOP button is pressed.
         sleepTrackerViewModel.navigateToSleepQualityEvent.observe(this, Observer {
-            if (it) {
-                // Only proceed if the event has never been handled
+            if (it) { // Observed state is true.
                 binding.stopButton.findNavController().navigate(
                         SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(
                                 sleepTrackerViewModel.tonight.startTimeMilli))
+                // Reset state to make sure we only navigate once, even if the device
+                // has a configuration change.
                 sleepTrackerViewModel.doneNavigating()
             }
         })
-
         return binding.root
     }
 }

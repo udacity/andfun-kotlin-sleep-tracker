@@ -33,13 +33,11 @@ import kotlinx.coroutines.experimental.launch
  */
 class SleepQualityViewModel(
         sleepNightKey: Long = 0L,
-        application: Application ) : AndroidViewModel(application) {
+        application: Application) : AndroidViewModel(application) {
 
-    /**  Database related variables. */
+    /**  Database-related variables. */
 
-    // Our trusty Room database.
     val database = SleepQualityDatabase.getDatabase(application)
-
 
     // The key of the current night we are working on.
     // Set when we create the fragment from the fragment arguments.
@@ -47,24 +45,28 @@ class SleepQualityViewModel(
 
     /** Coroutine setup variables */
 
-    // We need a job for our coroutines. The job has references to all coroutines.
+    // We need a job for our coroutines.
+    // The job has references to all coroutines.
     private val viewModelJob = Job()
 
     // We need a scope to run in, because we don't want to run this on the
-    // UI thread. IO is a threadpool for running operations that are not directly
+    // UI thread. IO is a thread pool for running operations that are not directly
     // UI related.
     private val scope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    // Variable that tells the Event whether it should navigate to SleepTrackerFragment.
+    // Variable that tells the fragment whether it should navigate to SleepTrackerFragment.
     private val _navigateToSleepTrackerEvent = MutableLiveData<Boolean>()
     val navigateToSleepTrackerEvent: LiveData<Boolean>
         get() = _navigateToSleepTrackerEvent
-    fun doneNavigating() {_navigateToSleepTrackerEvent.value = false}
 
+    fun doneNavigating() {
+        _navigateToSleepTrackerEvent.value = false
+    }
 
     /**
      * Cancel all coroutines when the ViewModel is cleared, so that we
-     * don't end up with dangling coroutines. onCleared() gets called when the
+     * don't end up with dangling coroutines.
+     * onCleared() gets called when the
      * ViewModel is destroyed.
      */
     override fun onCleared() {
@@ -72,8 +74,11 @@ class SleepQualityViewModel(
         viewModelJob.cancel()
     }
 
-    fun setSleepQualtiy(quality: Int) {
-        // Launch a coroutine to update the night in the database.
+    /**
+     * Adds the sleep quality to the night, then
+     * launches a coroutine to update the night in the database.
+     */
+    fun setSleepQuality(quality: Int) {
         scope.launch {
             val tonight = database.sleepQualityDao().get(sleepNightKey)
             tonight.sleepQuality = quality
@@ -87,10 +92,8 @@ class SleepQualityViewModel(
      */
     fun onSetSleepQuality(quality: Int) {
 
-        setSleepQualtiy(quality)
-
-        // Navigate back to the SleepTracker Fragment using the Event pattern.
-        // Setting this variable to true will alert the observer and trigger navigation.
+        setSleepQuality(quality)
+        // Setting this state variable to true will alert the observer and trigger navigation.
         _navigateToSleepTrackerEvent.value = true
     }
 }

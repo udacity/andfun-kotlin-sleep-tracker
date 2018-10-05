@@ -26,32 +26,18 @@ import java.text.SimpleDateFormat
 
 /**
  * These functions create a formatted string that can be set in a TextView.
- * Because we haven't learned about RecyclerView yet.
- * - Works with the Transformation.map
- * - Works with Binding Adapter
- * .... take your pick.
  */
 
+/**
+ * Returns a string representing the numeric quality rating.
+ *
+ */
 fun convertNumericQualityToString(quality: Int, context: Application): String {
-    var qualityString = "OK"
+    var qualityString = context.getString(R.string.three_ok)
     when (quality) {
         0 -> qualityString = context.getString(R.string.zero_very_bad)
         1 -> qualityString = context.getString(R.string.one_poor)
         2 -> qualityString = context.getString(R.string.two_soso)
-        3 -> qualityString = context.getString(R.string.three_ok)
-        4 -> qualityString = context.getString(R.string.four_pretty_good)
-        5 -> qualityString = context.getString(R.string.five_excellent)
-    }
-    return qualityString
-}
-
-fun _convertNumericQualityToString(quality: Int, context: Context): String {
-    var qualityString = "OK"
-    when (quality) {
-        0 -> qualityString = context.getString(R.string.zero_very_bad)
-        1 -> qualityString = context.getString(R.string.one_poor)
-        2 -> qualityString = context.getString(R.string.two_soso)
-        3 -> qualityString = context.getString(R.string.three_ok)
         4 -> qualityString = context.getString(R.string.four_pretty_good)
         5 -> qualityString = context.getString(R.string.five_excellent)
     }
@@ -70,7 +56,7 @@ fun formatNights(nights: List<SleepNight>, context: Application) : Spanned {
             // Get the context for the string resource from the passed in View.
             append(context.getString(R.string.title))
             nights.forEach {
-                append("<br><br>")
+                append("<br>")
                 append(context.getString(R.string.start_time))
                 append("\t${convertLongToDateString(it.startTimeMilli)}<br>")
                 if (it.endTimeMilli != 0L) {

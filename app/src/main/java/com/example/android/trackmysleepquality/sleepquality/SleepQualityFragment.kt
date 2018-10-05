@@ -16,13 +16,10 @@
 
 package com.example.android.trackmysleepquality.sleepquality
 
-import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -35,9 +32,7 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityB
  * Fragment that displays a list of clickable icons,
  * each representing a sleep quality rating.
  * Once the user taps an icon, the quality is set in the current sleepNight
- * and the
- * database is updated.
- *
+ * and the database is updated.
  */
 class SleepQualityFragment : Fragment() {
 
@@ -54,38 +49,31 @@ class SleepQualityFragment : Fragment() {
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_quality, container, false)
 
+        // Create an instance of the ViewModel Factory.
         viewModelFactory = SleepQualityViewModelFactory(
                 SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey,
                 this.activity!!.application)
 
         // Get a reference to the ViewModel associated with this fragment.
         sleepQualityViewModel =
-                ViewModelProviders.of(this, viewModelFactory).get(SleepQualityViewModel::class.java)
+                ViewModelProviders.of(
+                        this, viewModelFactory).get(SleepQualityViewModel::class.java)
 
         // DO NOT FORGET THIS!!!
         // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
         binding.sleepQualityViewModel = sleepQualityViewModel
 
-        // Add an Observer on the Event for Navigating when a Quality button is pressed.
-        // The Event takes care of making sure the navigation is only called once.
+        // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
         sleepQualityViewModel.navigateToSleepTrackerEvent.observe(this, Observer {
-           // it.getContentIfNotHandled()?.let {
-                // Only proceed if the event has never been handled
-            if (it) {
+            if (it) { // Observed state is true.
                 this.findNavController().navigate(
                         SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
+                // Reset state to make sure we only navigate once, even if the device
+                // has a configuration change.
                 sleepQualityViewModel.doneNavigating()
             }
-            // }
         })
-
-        // We need to make this value available to the ViewModel.
-        // TODO: Is this the correct way of doing this?
-        // TODO: Would it be better to create an additional shared ViewModel to hold just this data?
-       // sleepQualityViewModel.sleepNightKey =
-       //         SleepQualityFragmentArgs.fromBundle(arguments).sleepNightKey
-        // That's what the FACTORY IS FOR!
 
         return binding.root
     }

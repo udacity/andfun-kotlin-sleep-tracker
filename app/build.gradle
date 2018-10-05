@@ -38,6 +38,7 @@ android {
         }
     }
 
+    // Enables data binding.
     dataBinding {
         enabled = true
     }
@@ -72,8 +73,8 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:$navigationVersion"
 }
 
-// Kotlin coroutines are still experimental in the 1.2 branch, this will allow us to use them in
-// our project
+// Kotlin coroutines are still experimental in the 1.2 branch,
+// this will allow us to use them in our project; you may be able to remove this.
 kotlin {
     experimental {
         coroutines 'enable'

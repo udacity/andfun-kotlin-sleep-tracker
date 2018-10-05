@@ -17,18 +17,11 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
-import android.content.Context
-import android.text.Html
 import android.text.Spanned
-import androidx.core.text.toSpanned
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-//import com.example.android.trackmysleepquality.Event
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.convertLongToDateString
-import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.database.SleepQualityDatabase.Companion.getDatabase
 import com.example.android.trackmysleepquality.formatNights
@@ -41,28 +34,32 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 /**
  * ViewModel for SleepTrackerFragment.
+ *
+ * AndroidViewModel provides us with an Application Context that we need to
+ * get the database.
  */
 class SleepTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
-    /**  Database related variables. */
+    /**  Database-related variables. */
 
     val database = getDatabase(application)
 
     lateinit var tonight: SleepNight
-    var nights: LiveData<List<SleepNight>>
-    lateinit var nightsString: LiveData<Spanned>
+    private val nights: LiveData<List<SleepNight>>
+    // Converted nights to string for displaying
+    val nightsString: LiveData<Spanned>
 
-    /** Coroutine setup variables */
+    /** Coroutine variables */
 
-    // We need a job for our coroutines. The job has references to all coroutines.
+    // We need a job for our coroutines.
+    // The job has references to all coroutines.
     private var parentJob = Job()
 
-    // Create the scope for our coroutines.
+    // Scope for our coroutines.
     // Since we don't need to run on the UI thread, use the IO thread pool.
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.IO
     private val scope = CoroutineScope(coroutineContext)
-
 
     /**
      * Using backing properties for button states.
@@ -84,29 +81,28 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         get() = _clearButtonVisibilityState
 
 
-    /** Using events (Event class + LiveData + Observers in Fragment)
-     * to trigger UI actions in the Fragment.
-     */
-
-    // Variable that tells the Event whether it should show the toast.
+    // Variable that specifies whether the Fragment should show the toast.
     private var _showToastEvent = MutableLiveData<Boolean>()
     val showToastEvent: LiveData<Boolean>
         get() = _showToastEvent
-    fun doneShowingToast() {_showToastEvent.value = false}
 
-    // Variable that tells the Event whether it should navigate to SleepQualityFragment.
+    fun doneShowingToast() {
+        _showToastEvent.value = false
+    }
+
+    // Variable that tells the Fragment whether it should navigate to SleepQualityFragment.
     private val _navigateToSleepQualityEvent = MutableLiveData<Boolean>()
     val navigateToSleepQualityEvent: LiveData<Boolean>
         get() = _navigateToSleepQualityEvent
-    fun doneNavigating() {_navigateToSleepQualityEvent.value = false}
 
-
-    /** Initialization */
+    fun doneNavigating() {
+        _navigateToSleepQualityEvent.value = false
+    }
 
     init {
         // Get all the nights from the database and cache them.
         nights = database.sleepQualityDao().getAllNights()
-        nightsString =  Transformations.map(nights, {nights -> formatNights(nights, getApplication())})
+        nightsString = Transformations.map(nights, { nights -> formatNights(nights, getApplication()) })
 
         // Set the initial button visibilities.
         _startButtonVisibilityState.value = true
@@ -114,47 +110,56 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         _clearButtonVisibilityState.value = true
     }
 
-    /** Functions that launch the coroutines for database operations. */
-
-    // Launch a coroutine to insert the supplied night into the database.
+    /**
+     * Launches a coroutine to insert the supplied night into the database.
+     */
     fun insert(night: SleepNight) = scope.launch {
         database.sleepQualityDao().insert(night)
     }
 
-    // Launch a coroutine to update the provided night.
+    /**
+     * Launches a coroutine to update the provided night.
+     */
     fun update(night: SleepNight) = scope.launch {
         database.sleepQualityDao().update(night)
     }
 
-    // Launch a coroutine to clear the database table.
+    /**
+     * Launchs a coroutine to clear the database table.
+     */
     fun clear() = scope.launch {
         database.sleepQualityDao().clear()
     }
 
-    // Called when the ViewModel is dismantled. At this point, we want to cancel all coroutines;
-    // otherwise we end up with processes that have nowhere to return to using memory and resources.
+    /**
+     * Called when the ViewModel is dismantled.
+     * At this point, we want to cancel all coroutines;
+     * otherwise we end up with processes that have nowhere to return to
+     * using memory and resources.
+     */
     override fun onCleared() {
         super.onCleared()
         parentJob.cancel()
     }
 
-    /** Methods for buttons presses */
-
-    // Called when the START button is clicked.
+    /**
+     * Executes when the START button is clicked.
+     */
     fun onStart() {
-        // Change button visibility.
         _startButtonVisibilityState.value = false
         _stopButtonVisibilityState.value = true
         _clearButtonVisibilityState.value = false
 
-        // Create a new night, which captures the current time, and insert it into the database.
+        // Create a new night, which captures the current time,
+        // and insert it into the database.
         tonight = SleepNight()
         insert(tonight)
     }
 
-    // Called when the STOP button is clicked.
+    /**
+     * Executes when the STOP button is clicked.
+     */
     fun onStop() {
-        // Change button visibility.
         _startButtonVisibilityState.value = true
         _stopButtonVisibilityState.value = false
         _clearButtonVisibilityState.value = true
@@ -163,14 +168,14 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         tonight.endTimeMilli = System.currentTimeMillis()
         update(tonight)
 
-        // Navigate to the SleepQualityFragment to collect a quality rating.
+        // Set state to navigate to the SleepQualityFragment.
         _navigateToSleepQualityEvent.value = true
     }
 
-    // Called when the CLEAR button is clicked.
+    /**
+     * Executes when the CLEAR button is clicked.
+     */
     fun onClear() {
-
-        // Set the button visibility.
         _startButtonVisibilityState.value = true
         _stopButtonVisibilityState.value = false
         _clearButtonVisibilityState.value = false
@@ -178,7 +183,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         // Clear the database table.
         clear()
 
-        // Show a toast because it's friendly to let users know.
+        // Show a toast because it's friendly.
         _showToastEvent.value = true
     }
 }

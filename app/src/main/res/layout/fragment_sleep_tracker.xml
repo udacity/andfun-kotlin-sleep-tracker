@@ -14,20 +14,30 @@
   ~ limitations under the License.
   -->
 
+<!-- Wrapping the layout into /layout to make it available with data binding. -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Data to make available to the XML via data binding. In this case,
+         the whole ViewModel, so that we can access the LiveData,
+         click handlers, and state variables. -->
     <data>
+
         <variable
             name="sleepTrackerViewModel"
             type="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel" />
     </data>
 
+    <!-- Start of the visible fragment layout using ConstraintLayout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".sleeptracker.SleepTrackerFragment">
+
+        <!-- Simplest way of displaying scrollable text and data. There is a
+             better and more efficient way to do this, and you will learn about
+             RecyclerView in a later lesson. -->
 
         <ScrollView
             android:layout_width="match_parent"
@@ -37,6 +47,10 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stop_button">
+
+            <!-- In the TextView, we can access the nightsString LiveData,
+                 which keeps it displayed and updated in the TextView
+                 whenever it changes. -->
 
             <TextView
                 android:id="@+id/textview"
@@ -48,7 +62,9 @@
                 android:text="@{sleepTrackerViewModel.nightsString}" />
         </ScrollView>
 
-        <!-- With Adapter: app:nights="@{sleepTrackerViewModel.nights}"  -->
+        <!-- With data binding and LiveData, we can track the buttons' visibility states
+             from the ViewModel. The click handler is in the ViewModel as well, and
+             you can set it for the Views using this lambda pattern. -->
 
         <Button
             android:id="@+id/start_button"
@@ -92,7 +108,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
