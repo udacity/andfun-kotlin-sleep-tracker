@@ -59,7 +59,7 @@ fun formatNights(nights: List<SleepNight>, context: Application) : Spanned {
                 append("<br>")
                 append(context.getString(R.string.start_time))
                 append("\t${convertLongToDateString(it.startTimeMilli)}<br>")
-                if (it.endTimeMilli != 0L) {
+                if (it.endTimeMilli != it.startTimeMilli) {
                     append(context.getString(R.string.end_time))
                     append("\t${convertLongToDateString(it.endTimeMilli)}<br>")
                     append(context.getString(R.string.quality))

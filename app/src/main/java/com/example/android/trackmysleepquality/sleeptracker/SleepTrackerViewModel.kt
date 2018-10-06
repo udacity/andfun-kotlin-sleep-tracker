@@ -18,6 +18,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
 import android.text.Spanned
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -99,15 +100,43 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         _navigateToSleepQualityEvent.value = false
     }
 
+    /**
+     *  Handling the case of the stopped app or forgotten recording,
+     *  the start and end times will be the same.
+     *  And if less than 16 hours have passed since start,
+     *  we assume we are continuing, otherwise, we assume a new recording.
+     */
+    fun startedNight() : Boolean {
+
+        val night = database.sleepQualityDao().getTonight()
+
+        if (night != null) {
+            tonight = night
+            return ((night.startTimeMilli == night.endTimeMilli)
+                    && (night.endTimeMilli - night.startTimeMilli < 57600000))
+        } else {
+            return false
+        }
+    }
+
     init {
         // Get all the nights from the database and cache them.
         nights = database.sleepQualityDao().getAllNights()
         nightsString = Transformations.map(nights, { nights -> formatNights(nights, getApplication()) })
 
-        // Set the initial button visibilities.
-        _startButtonVisibilityState.value = true
-        _stopButtonVisibilityState.value = false
         _clearButtonVisibilityState.value = true
+
+        scope.launch {
+            if (startedNight()) {
+                _startButtonVisibilityState.postValue(false)
+                _stopButtonVisibilityState.postValue(true)
+            } else {
+                _startButtonVisibilityState.postValue(true)
+                _stopButtonVisibilityState.postValue(false)
+            }
+        }
+
+
     }
 
     /**
