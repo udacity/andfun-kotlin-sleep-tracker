@@ -48,8 +48,12 @@ interface SleepQualityDao {
     @Query("DELETE FROM daily_sleep_quality_table")
     fun clear()
 
-    // Selects and return all rows in the table,
+    // Selects and returns all rows in the table,
     // sorted by start time in descending order.
-    @Query("SELECT * from daily_sleep_quality_table ORDER BY start_time_milli DESC")
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC")
     fun getAllNights(): LiveData<List<SleepNight>>
+
+    // Selects and returns the latest night.
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC LIMIT 1")
+    fun getTonight(): SleepNight
 }

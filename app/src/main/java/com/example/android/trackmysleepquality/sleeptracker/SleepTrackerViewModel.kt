@@ -30,6 +30,7 @@ import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import kotlin.coroutines.experimental.CoroutineContext
 
 /**
@@ -99,15 +100,42 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         _navigateToSleepQualityEvent.value = false
     }
 
+    // WHY is nights.value NULL here???
+    // Don't return LiveData if you want the value sync.
+    //bLiveData is to watch the data and distribute it to the observers.
+    // It won't calculate the value until an active observer is added.
+    // So it's not available in init of this ViewModel.
+    // And we have to run this in a coroutine.
+   // fun getOldNight(): Boolean {
+      //  runBlocking {
+      //      tonight = database.sleepQualityDao().getTonight()
+      //  }
+      //  return (tonight.startTimeMilli == tonight.endTimeMilli)
+      //          && (tonight.endTimeMilli - tonight.startTimeMilli < 57600000)
+      //  return true
+   // }
+
     init {
         // Get all the nights from the database and cache them.
         nights = database.sleepQualityDao().getAllNights()
         nightsString = Transformations.map(nights, { nights -> formatNights(nights, getApplication()) })
 
-        // Set the initial button visibilities.
-        _startButtonVisibilityState.value = true
-        _stopButtonVisibilityState.value = false
-        _clearButtonVisibilityState.value = true
+        // TODO: HELP How do I do this?????
+        // Handling the case of the stopped app or forgotten recording,
+        // the start and end times will be the same.
+        // And if less than 16 hours have passed since start,
+        // we assume we are continuing, otherwise, we assume a new recording.
+      //  if (getOldNight()) { // Continue with the previous night
+            // Set the initial button visibilities if we are continuing.
+      //      _startButtonVisibilityState.value = false
+      //      _stopButtonVisibilityState.value = true
+       //     _clearButtonVisibilityState.value = true
+      //  } else {
+            // Set the initial button visibilities if we are starting.
+            _startButtonVisibilityState.value = true
+            _stopButtonVisibilityState.value = false
+            _clearButtonVisibilityState.value = true
+       // }
     }
 
     /**
