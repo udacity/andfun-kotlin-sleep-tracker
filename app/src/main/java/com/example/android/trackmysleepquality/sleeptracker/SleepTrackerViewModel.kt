@@ -18,6 +18,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
 import android.text.Spanned
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -100,42 +101,41 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
         _navigateToSleepQualityEvent.value = false
     }
 
-    // WHY is nights.value NULL here???
-    // Don't return LiveData if you want the value sync.
-    //bLiveData is to watch the data and distribute it to the observers.
-    // It won't calculate the value until an active observer is added.
-    // So it's not available in init of this ViewModel.
-    // And we have to run this in a coroutine.
-   // fun getOldNight(): Boolean {
-      //  runBlocking {
-      //      tonight = database.sleepQualityDao().getTonight()
-      //  }
-      //  return (tonight.startTimeMilli == tonight.endTimeMilli)
-      //          && (tonight.endTimeMilli - tonight.startTimeMilli < 57600000)
-      //  return true
-   // }
+    /**
+     *  Handling the case of the stopped app or forgotten recording,
+     *  the start and end times will be the same.
+     *  And if less than 16 hours have passed since start,
+     *  we assume we are continuing, otherwise, we assume a new recording.
+     */
+    fun startedNight() : Boolean {
+
+        val night = database.sleepQualityDao().getTonight()
+
+        if (night != null) {
+            tonight = night
+            return ((night.startTimeMilli == night.endTimeMilli)
+                    && (night.endTimeMilli - night.startTimeMilli < 57600000))
+        } else {
+            return false
+        }
+    }
 
     init {
         // Get all the nights from the database and cache them.
         nights = database.sleepQualityDao().getAllNights()
         nightsString = Transformations.map(nights, { nights -> formatNights(nights, getApplication()) })
 
-        // TODO: HELP How do I do this?????
-        // Handling the case of the stopped app or forgotten recording,
-        // the start and end times will be the same.
-        // And if less than 16 hours have passed since start,
-        // we assume we are continuing, otherwise, we assume a new recording.
-      //  if (getOldNight()) { // Continue with the previous night
-            // Set the initial button visibilities if we are continuing.
-      //      _startButtonVisibilityState.value = false
-      //      _stopButtonVisibilityState.value = true
-       //     _clearButtonVisibilityState.value = true
-      //  } else {
-            // Set the initial button visibilities if we are starting.
-            _startButtonVisibilityState.value = true
-            _stopButtonVisibilityState.value = false
-            _clearButtonVisibilityState.value = true
-       // }
+        _clearButtonVisibilityState.value = true
+
+        scope.launch {
+            if (startedNight()) {
+                _startButtonVisibilityState.postValue(false)
+                _stopButtonVisibilityState.postValue(true)
+            } else {
+                _startButtonVisibilityState.postValue(true)
+                _stopButtonVisibilityState.postValue(false)
+            }
+        }
     }
 
     /**
