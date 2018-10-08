@@ -64,17 +64,13 @@ class SleepQualityViewModel(
      * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
      * the [Fragment]
      */
-    private val _navigateToSleepTrackerEvent = MutableLiveData<Boolean>()
+    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
 
     /**
-     * When true
+     * When true immediately navigate back to the [SleepTrackerFragment]
      */
-    val navigateToSleepTrackerEvent: LiveData<Boolean>
-        get() = _navigateToSleepTrackerEvent
-
-    fun doneNavigating() {
-        _navigateToSleepTrackerEvent.value = false
-    }
+    val navigateToSleepTracker: LiveData<Boolean?>
+        get() = _navigateToSleepTracker
 
     /**
      * Cancel all coroutines when the ViewModel is cleared, to cleanup any pending work.
@@ -84,6 +80,14 @@ class SleepQualityViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+
+    /**
+     * Call this immediately after navigating to [SleepTrackerFragment]
+     */
+    fun doneNavigating() {
+        _navigateToSleepTracker.value = null
     }
 
     /**
@@ -102,7 +106,7 @@ class SleepQualityViewModel(
             }
 
             // Setting this state variable to true will alert the observer and trigger navigation.
-            _navigateToSleepTrackerEvent.value = true
+            _navigateToSleepTracker.value = true
         }
     }
 }
