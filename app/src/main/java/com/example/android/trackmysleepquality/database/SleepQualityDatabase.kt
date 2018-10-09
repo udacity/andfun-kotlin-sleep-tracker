@@ -31,33 +31,75 @@ import androidx.room.RoomDatabase
 @Database(entities = [SleepNight::class], version = 1, exportSchema = false)
 abstract class SleepQualityDatabase : RoomDatabase() {
 
-    // Connect the database to the DAO.
+    /**
+     * Connects the database to the DAO.
+     */
     abstract fun sleepQualityDao(): SleepQualityDao
 
-    // Singleton pattern.
-    // If we already have a database, return it, otherwise, create an instance.
+    /**
+     * Defines a companion object.
+     * This allows us to add functions on the SleepQualityDatabase class.
+     *
+     * For example, clients can call `SleepQualityDatabase.getDatabase(context)`
+     * to instantiate a new SleepQualityDatabase.
+     */
     companion object {
+        /**
+         * INSTANCE will keep a reference to any database returned via getDatabase.
+         *
+         * This helps us avoid repeatedly initializing the database, which is expensive.
+         */
         @Volatile
         private var INSTANCE: SleepQualityDatabase? = null
 
+        /**
+         * Helper function to get the database.
+         *
+         * If a database has already been retrieved, the previous database will be returned.
+         * Otherwise, creates a new database.
+         *
+         * This function is threadsafe, and callers should cache the result for multiple database
+         * calls to avoid overhead.
+         *
+         * This is an example of a simple Singleton pattern that takes another Singleton as an
+         * argument in Kotlin.
+         *
+         * To learn more about Singleton, read the Wikipedia article:
+         * https://en.wikipedia.org/wiki/Singleton_pattern
+         *
+         * @param Context The application context Singleton, used to get access to the filesystem.
+         */
         fun getDatabase(
                 context: Context
         ): SleepQualityDatabase {
-            val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
-            }
+
+            // Multiple threads can ask for the database at the same time,
+            // so we ensure we only initialize it once by using synchronized.
+            // Only one thread may enter a synchronized block at a time.
             synchronized(this) {
-                val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        SleepQualityDatabase::class.java,
-                        "sleep_history_database"
-                )
-                        // Wipes and rebuilds instead of migrating if no Migration object.
-                        // Migration is not part of this lesson.
-                        .fallbackToDestructiveMigration()
-                        .build()
-                INSTANCE = instance
+
+                // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
+                // Smart cast is only available to local variables.
+                var instance = INSTANCE
+
+                // If instance is 'null', make a new database instance.
+
+                if (instance == null) {
+
+                    instance = Room.databaseBuilder(
+                            context.applicationContext,
+                            SleepQualityDatabase::class.java,
+                            "sleep_history_database"
+                    )
+                            // Wipes and rebuilds instead of migrating if no Migration object.
+                            // Migration is not part of this lesson.
+                            .fallbackToDestructiveMigration()
+                            .build()
+
+                    // Assign INSTANCE to the newly created database.
+                    INSTANCE = instance
+                }
+                // Return instance; smart cast to be non-null.
                 return instance
             }
         }

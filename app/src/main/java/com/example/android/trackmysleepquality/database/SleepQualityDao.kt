@@ -31,29 +31,51 @@ import androidx.room.Update
 @Dao
 interface SleepQualityDao {
 
+    /**
+     * Inserts a new value into the database.
+     *
+     * @param night new value to write
+     */
     @Insert
     fun insert(night: SleepNight)
 
-    // When updating a row with a value already set in a column,
-    // replaces the old value with the new one.
+    /**
+     * Replaces the old value with the new one.
+     * When updating a row with a value already set in a column,
+     * replaces the old value with the new one.
+     *
+     * @param night new value to write
+     */
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(night: SleepNight)
 
-    // Selects and returns the row that matches the supplied start time, which is our key.
+    /**
+     * Selects and returns the row that matches the supplied start time, which is our key.
+     *
+     * @param key startTimeMilli to match
+     */
     @Query("SELECT * from daily_sleep_quality_table WHERE start_time_milli = :key ")
     fun get(key: Long): SleepNight
 
-    // Deletes all values from the table.
-    // This does not delete the table, only its contents.
+    /**
+     * Deletes all values from the table.
+     *
+     * This does not delete the table, only its contents.
+     */
     @Query("DELETE FROM daily_sleep_quality_table")
     fun clear()
 
-    // Selects and returns all rows in the table,
-    // sorted by start time in descending order.
+    /**
+     * Selects and returns all rows in the table.
+     *
+     * Sorted by start time in descending order.
+     */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC")
     fun getAllNights(): LiveData<List<SleepNight>>
 
-    // Selects and returns the latest night.
+    /**
+     * Selects and returns the latest night.
+     */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC LIMIT 1")
     fun getTonight(): SleepNight
 }

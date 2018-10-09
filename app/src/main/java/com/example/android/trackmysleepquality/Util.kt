@@ -16,11 +16,10 @@
 
 package com.example.android.trackmysleepquality
 
-import android.app.Application
-import android.content.Context
+import android.content.res.Resources
+import android.os.Build
 import android.text.Html
 import android.text.Spanned
-import androidx.core.text.toSpanned
 import com.example.android.trackmysleepquality.database.SleepNight
 import java.text.SimpleDateFormat
 
@@ -32,14 +31,14 @@ import java.text.SimpleDateFormat
  * Returns a string representing the numeric quality rating.
  *
  */
-fun convertNumericQualityToString(quality: Int, context: Application): String {
-    var qualityString = context.getString(R.string.three_ok)
+fun convertNumericQualityToString(quality: Int, resources: Resources): String {
+    var qualityString = resources.getString(R.string.three_ok)
     when (quality) {
-        0 -> qualityString = context.getString(R.string.zero_very_bad)
-        1 -> qualityString = context.getString(R.string.one_poor)
-        2 -> qualityString = context.getString(R.string.two_soso)
-        4 -> qualityString = context.getString(R.string.four_pretty_good)
-        5 -> qualityString = context.getString(R.string.five_excellent)
+        0 -> qualityString = resources.getString(R.string.zero_very_bad)
+        1 -> qualityString = resources.getString(R.string.one_poor)
+        2 -> qualityString = resources.getString(R.string.two_soso)
+        4 -> qualityString = resources.getString(R.string.four_pretty_good)
+        5 -> qualityString = resources.getString(R.string.five_excellent)
     }
     return qualityString
 }
@@ -49,35 +48,39 @@ fun convertLongToDateString(systemTime: Long): String {
             .format(systemTime).toString()
 }
 
-fun formatNights(nights: List<SleepNight>, context: Application) : Spanned {
-    if (nights != null) {
-        val sb = StringBuilder()
-        sb.apply {
-            // Get the context for the string resource from the passed in View.
-            append(context.getString(R.string.title))
-            nights.forEach {
-                append("<br>")
-                append(context.getString(R.string.start_time))
-                append("\t${convertLongToDateString(it.startTimeMilli)}<br>")
-                if (it.endTimeMilli != it.startTimeMilli) {
-                    append(context.getString(R.string.end_time))
-                    append("\t${convertLongToDateString(it.endTimeMilli)}<br>")
-                    append(context.getString(R.string.quality))
-                    append("\t${convertNumericQualityToString(it.sleepQuality, context)}<br>")
-                    append(context.getString(R.string.hours_slept))
-                    // Hours
-                    append("\t ${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60 / 60}:")
-                    // Minutes
-                    append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60}:")
-                    // Seconds
-                    append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000}<br><br>")
-                }
+fun formatNights(nights: List<SleepNight>, resources: Resources): Spanned {
+    val sb = StringBuilder()
+    sb.apply {
+        // Get the context for the string resource from the passed in View.
+        append(resources.getString(R.string.title))
+        nights.forEach {
+            append("<br>")
+            append(resources.getString(R.string.start_time))
+            append("\t${convertLongToDateString(it.startTimeMilli)}<br>")
+            if (it.endTimeMilli != it.startTimeMilli) {
+                append(resources.getString(R.string.end_time))
+                append("\t${convertLongToDateString(it.endTimeMilli)}<br>")
+                append(resources.getString(R.string.quality))
+                append("\t${convertNumericQualityToString(it.sleepQuality, resources)}<br>")
+                append(resources.getString(R.string.hours_slept))
+                // Hours
+                append("\t ${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60 / 60}:")
+                // Minutes
+                append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000 / 60}:")
+                // Seconds
+                append("${it.endTimeMilli.minus(it.startTimeMilli) / 1000}<br><br>")
             }
         }
-        // fromHtml is deprecated for target API without a flag, but since our minSDK is 19, we
-        // can't use the newer version, which requires minSDK of 24
-        //https://developer.android.com/reference/android/text/Html#fromHtml(java.lang.String,%20int)
+    }
+    // fromHtml is deprecated for target API without a flag, but since our minSDK is 19, we
+    // can't use the newer version, which requires minSDK of 24
+    // https://developer.android.com/reference/android/text/Html#fromHtml(java.lang.String,%20int)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY)
+    } else {
+        @Suppress("DEPRECATION")
         return Html.fromHtml(sb.toString())
-    } else return "".toSpanned()
+    }
 }
 
