@@ -21,13 +21,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 
 /**
  * ViewModel for SleepQualityFragment.
@@ -62,20 +57,22 @@ class SleepQualityViewModel(
      */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    // TODO I removed the nullable type
     /**
      * Variable that tells the fragment whether it should navigate to [SleepTrackerFragment].
      *
      * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
      * the [Fragment]
      */
-    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
+    private val _navigateToSleepTracker = MutableLiveData<Boolean>()
 
     /**
      * When true immediately navigate back to the [SleepTrackerFragment]
      */
-    val navigateToSleepTracker: LiveData<Boolean?>
+    val navigateToSleepTracker: LiveData<Boolean>
         get() = _navigateToSleepTracker
 
+    // TODO move override methods to the end
     /**
      * Cancels all coroutines when the ViewModel is cleared, to cleanup any pending work.
      *
@@ -91,7 +88,8 @@ class SleepQualityViewModel(
      * Call this immediately after navigating to [SleepTrackerFragment]
      */
     fun doneNavigating() {
-        _navigateToSleepTracker.value = null
+        // TODO I change this to set it to false
+        _navigateToSleepTracker.value = false
     }
 
     /**
