@@ -48,6 +48,7 @@ abstract class SleepDatabase : RoomDatabase() {
          *
          * This will help us avoid repeatedly initializing the database, which is expensive.
          */
+        // TODO explain why this a volatile
         @Volatile
         private var INSTANCE: SleepDatabase? = null
 
@@ -89,6 +90,7 @@ abstract class SleepDatabase : RoomDatabase() {
                     )
                             // Wipes and rebuilds instead of migrating if no Migration object.
                             // Migration is not part of this lesson.
+                            // TODO you could link here to more information about migrations, such as Florina's blog post
                             .fallbackToDestructiveMigration()
                             .build()
                     // Assign INSTANCE to the newly created database.

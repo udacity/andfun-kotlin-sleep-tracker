@@ -24,13 +24,8 @@ import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 
 /**
  * ViewModel for SleepTrackerFragment.
@@ -63,14 +58,18 @@ class SleepTrackerViewModel(
      */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    // TODO unless you're doing the backing property thing, I say we don't put underscores in front
     private var _tonight = MutableLiveData<SleepNight?>()
 
     private val _nights = database.getAllNights()
+
+    // TODO why is this a // comment while other use /** ? Pick one - I use // for variables
     // Converted _nights to string for displaying
     val nightsString = Transformations.map(_nights) { nights ->
         formatNights(nights, application.resources)
     }
 
+    // TODO in the next three methods give "it" a name to make it clearer what's going on
     /**
      * True if and only if the start button should be shown.
      */
@@ -82,6 +81,7 @@ class SleepTrackerViewModel(
      * True if and only if the stop button should be shown.
      */
     val stopButtonVisible = Transformations.map(_tonight) {
+        // TODO why is this != while the one above is ==? Yet the comments say the opposite
         null != it
     }
 
@@ -93,30 +93,33 @@ class SleepTrackerViewModel(
     }
 
 
+    // TODO made the boolean not a nullable
     /**
      * Request a toast by setting this value to true.
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
-    private var _showToastEvent = MutableLiveData<Boolean?>()
+    private var _showToastEvent = MutableLiveData<Boolean>()
 
+    // TODO you're showing a snackbar, not a toast
     /**
      * If this is true, immediately `show()` a toast and call `doneShowingToast()`.
      */
-    val showToastEvent: LiveData<Boolean?>
+    val showToastEvent: LiveData<Boolean>
         get() = _showToastEvent
 
+    // TODO name should be _eventNavigateToSleepQuality, and changed to non-nullable
     /**
      * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
-    private val _navigateToSleepQuality = MutableLiveData<SleepNight?>()
+    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
 
     /**
      * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
      */
-    val navigateToSleepQuality: LiveData<SleepNight?>
+    val navigateToSleepQuality: LiveData<SleepNight>
         get() = _navigateToSleepQuality
 
     /**
@@ -126,7 +129,8 @@ class SleepTrackerViewModel(
      * toast.
      */
     fun doneShowingToast() {
-        _showToastEvent.value = null
+        // TODO changed to false
+        _showToastEvent.value = false
     }
 
     /**
@@ -208,6 +212,7 @@ class SleepTrackerViewModel(
         }
     }
 
+    // TODO can you add a comment about return@launch?
     /**
      * Executes when the STOP button is clicked.
      */
@@ -236,6 +241,7 @@ class SleepTrackerViewModel(
             // and clear _tonight since it's no longer in the database
             _tonight.value = null
 
+            // TODO toast or snackbar?
             // Show a toast because it's friendly.
             _showToastEvent.value = true
         }

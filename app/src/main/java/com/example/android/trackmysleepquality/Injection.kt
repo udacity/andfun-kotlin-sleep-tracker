@@ -37,7 +37,7 @@ object Injection {
      * (Testing is not covered in this lesson.)
      *
      * Here is how it works:
-     *    1. The Fragment asks for a ViewModelFactory, which it will use to get a referemnce to
+     *    1. The Fragment asks for a ViewModelFactory, which it will use to get a reference to
      *       the ViewModel (which the ViewModelProvider will get and create if necessary.
      *    2. provide...ViewModelFactory gets a reference to the data source
      *       with provideUserDataSource.

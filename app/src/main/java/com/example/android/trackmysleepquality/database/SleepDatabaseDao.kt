@@ -17,11 +17,7 @@
 package com.example.android.trackmysleepquality.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 
 /**
@@ -47,12 +43,11 @@ interface SleepDatabaseDao {
      *
      * @param key startTimeMili to match
      */
-    @Query("SELECT * from daily_sleep_quality_table WHERE start_time_milli = :key ")
+    @Query("SELECT * from daily_sleep_quality_table WHERE start_time_milli = :key")
     fun get(key: Long): SleepNight
 
     /**
      * Deletes all values from the table.
-     *
      * This does not delete the table, only its contents.
      */
     @Query("DELETE FROM daily_sleep_quality_table")
@@ -60,7 +55,6 @@ interface SleepDatabaseDao {
 
     /**
      * Selects and returns all rows in the table,
-     *
      * sorted by start time in descending order.
      */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC")

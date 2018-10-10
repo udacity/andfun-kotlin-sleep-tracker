@@ -65,6 +65,7 @@ class SleepTrackerFragment : Fragment() {
                 ViewModelProviders.of(
                         this, viewModelFactory).get(SleepTrackerViewModel::class.java)
 
+        // TODO same comment about removing this DO NOT FORGET
         // DO NOT FORGET THIS!!!
         // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
@@ -74,21 +75,24 @@ class SleepTrackerFragment : Fragment() {
         // This is necessary so that the binding can observe LiveData updates.
         binding.setLifecycleOwner(this)
 
+        // TODO change to eventShowSnackbar
         // Add an Observer on the state variable for showing a Toast when CLEAR button is pressed.
-        sleepTrackerViewModel.showToastEvent.observe(this, Observer {
-            if (it == true) { // Observed state is true.
-                Snackbar.make(
-                        activity!!.findViewById(android.R.id.content),
-                        getString(R.string.cleared_message),
-                        Snackbar.LENGTH_SHORT // How long to display the message.
-                ).show()
-                // Reset state to make sure the toast is only shown once, even if the device
-                // has a configuration change.
-                sleepTrackerViewModel.doneShowingToast()
-            }
+        sleepTrackerViewModel.showToastEvent.observe(this,
+                Observer { showSnackbar ->
+                    if (showSnackbar) { // Observed state is true.
+                        Snackbar.make(
+                                activity!!.findViewById(android.R.id.content),
+                                getString(R.string.cleared_message),
+                                Snackbar.LENGTH_SHORT // How long to display the message.
+                        ).show()
+                        // Reset state to make sure the toast is only shown once, even if the device
+                        // has a configuration change.
+                        // TODO change to onShowSnackbarComplete
+                        sleepTrackerViewModel.doneShowingToast()
+                    }
         })
 
-        // Add an Observer on the state varioable for Navigating when STOP button is pressed.
+        // Add an Observer on the state variable for Navigating when STOP button is pressed.
         sleepTrackerViewModel.navigateToSleepQuality.observe(this, Observer { night ->
             night?.let {
                 binding.stopButton.findNavController().navigate(
