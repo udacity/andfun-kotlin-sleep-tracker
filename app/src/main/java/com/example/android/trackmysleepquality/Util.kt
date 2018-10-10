@@ -20,7 +20,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
-import androidx.core.text.toSpanned
 import com.example.android.trackmysleepquality.database.SleepNight
 import java.text.SimpleDateFormat
 
@@ -49,7 +48,7 @@ fun convertLongToDateString(systemTime: Long): String {
             .format(systemTime).toString()
 }
 
-fun formatNights(nights: List<SleepNight>, resources: Resources) : Spanned {
+fun formatNights(nights: List<SleepNight>, resources: Resources): Spanned {
     val sb = StringBuilder()
     sb.apply {
         // Get the resources for the string resource from the passed in View.

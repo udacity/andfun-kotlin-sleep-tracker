@@ -33,7 +33,7 @@ import androidx.appcompat.app.AppCompatActivity
  * It also uses and builds on the following techniques from previous lessons:
  * - Transformation map
  * - Data Binding in XML files
- * - iewModel Factory
+ * - ViewModel Factory
  * - Using Backing Properties to protect MutableLiveData
  * - Observable state LiveData variables to trigger navigation
  */

@@ -17,28 +17,32 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
-import com.example.android.trackmysleepquality.database.SleepDatabase.Companion.getInstance
 import com.example.android.trackmysleepquality.formatNights
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 /**
  * ViewModel for SleepTrackerFragment.
- *
- * AndroidViewModel provides us with an Application Context that we need to
- * get the database.
  */
-class SleepTrackerViewModel(application: Application) : AndroidViewModel(application) {
+class SleepTrackerViewModel(
+        dataSource: SleepDatabaseDao,
+        application: Application) : ViewModel() {
 
     /**
-     * Hold a reference to SleepDatabase.
+     * Hold a reference to SleepDatabase via SleepDatabaseDao.
      */
-    val database = getInstance(application)
+    val database = dataSource
 
     /** Coroutine variables */
 
@@ -61,7 +65,7 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
 
     private var _tonight = MutableLiveData<SleepNight?>()
 
-    private val _nights = database.sleepQualityDao().getAllNights()
+    private val _nights = database.getAllNights()
     // Converted _nights to string for displaying
     val nightsString = Transformations.map(_nights) { nights ->
         formatNights(nights, application.resources)
@@ -148,12 +152,10 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
     /**
      *  Handling the case of the stopped app or forgotten recording,
      *  the start and end times will be the same.
-     *  And if less than 16 hours have passed since start,
-     *  we assume we are continuing, otherwise, we assume a new recording.
      */
     suspend fun getTonightFromDatabase(): SleepNight? {
         return withContext(Dispatchers.IO) {
-            var night = database.sleepQualityDao().getTonight()
+            var night = database.getTonight()
             if (night?.endTimeMilli != night?.startTimeMilli) {
                 night = null
             }
@@ -164,19 +166,19 @@ class SleepTrackerViewModel(application: Application) : AndroidViewModel(applica
 
     suspend fun insert(night: SleepNight) {
         withContext(Dispatchers.IO) {
-            database.sleepQualityDao().insert(night)
+            database.insert(night)
         }
     }
 
     suspend fun update(night: SleepNight) {
         withContext(Dispatchers.IO) {
-            database.sleepQualityDao().update(night)
+            database.update(night)
         }
     }
 
     suspend fun clear() {
         withContext(Dispatchers.IO) {
-            database.sleepQualityDao().clear()
+            database.clear()
         }
     }
 

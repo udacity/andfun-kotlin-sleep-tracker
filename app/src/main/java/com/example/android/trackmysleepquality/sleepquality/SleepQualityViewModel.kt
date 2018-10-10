@@ -16,16 +16,18 @@
 
 package com.example.android.trackmysleepquality.sleepquality
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+//import com.example.android.trackmysleepquality.Event
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-//import com.example.android.trackmysleepquality.Event
-import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 /**
  * ViewModel for SleepQualityFragment.
@@ -37,7 +39,7 @@ class SleepQualityViewModel(
         dataSource: SleepDatabaseDao) : ViewModel() {
 
     /**
-     * Hold a reference to SleepDatabase.
+     * Hold a reference to SleepDatabase via its SleepDatabaseDao.
      */
     val database = dataSource
 
@@ -75,7 +77,7 @@ class SleepQualityViewModel(
         get() = _navigateToSleepTracker
 
     /**
-     * Cancel all coroutines when the ViewModel is cleared, to cleanup any pending work.
+     * Cancels all coroutines when the ViewModel is cleared, to cleanup any pending work.
      *
      * onCleared() gets called when the ViewModel is destroyed.
      */

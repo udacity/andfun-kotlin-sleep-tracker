@@ -32,7 +32,7 @@ import androidx.room.RoomDatabase
 abstract class SleepDatabase : RoomDatabase() {
 
     /**
-     * Connect the database to the DAO.
+     * Connects the database to the DAO.
      */
     abstract fun sleepQualityDao(): SleepDatabaseDao
 
@@ -71,16 +71,16 @@ abstract class SleepDatabase : RoomDatabase() {
         fun getInstance(
                 context: Context
         ): SleepDatabase {
-            // multiple threads can ask for the database at the same time, ensure we only initialize
+            // Multiple threads can ask for the database at the same time, ensure we only initialize
             // it once by using synchronized. Only one thread may enter a synchronized block at a
             // time.
             synchronized(this) {
 
-                // copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
-                // smart cast is only available to local variables.
+                // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
+                // Smart cast is only available to local variables.
                 var instance = INSTANCE
 
-                // if instance is `null` make a new database instance
+                // If instance is `null` make a new database instance.
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                             context.applicationContext,
@@ -91,11 +91,11 @@ abstract class SleepDatabase : RoomDatabase() {
                             // Migration is not part of this lesson.
                             .fallbackToDestructiveMigration()
                             .build()
-                    // assign INSTANCE to the newly created database
+                    // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }
 
-                // return instance; smart cast to be non-null
+                // Return instance; smart cast to be non-null.
                 return instance
             }
         }
