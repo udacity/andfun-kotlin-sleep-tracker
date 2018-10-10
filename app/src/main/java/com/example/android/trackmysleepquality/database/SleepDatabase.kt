@@ -29,27 +29,27 @@ import androidx.room.RoomDatabase
  * so you can reuse it.
  */
 @Database(entities = [SleepNight::class], version = 1, exportSchema = false)
-abstract class SleepQualityDatabase : RoomDatabase() {
+abstract class SleepDatabase : RoomDatabase() {
 
     /**
      * Connect the database to the DAO.
      */
-    abstract fun sleepQualityDao(): SleepQualityDao
+    abstract fun sleepQualityDao(): SleepDatabaseDao
 
     /**
-     * Define a companion object, this allows us to add functions on the SleepQualityDatabase class.
+     * Define a companion object, this allows us to add functions on the SleepDatabase class.
      *
-     * For example, clients can call `SleepQualityDatabase.getDatabase(context)` to instantiate
-     * a new SleepQualityDatabase.
+     * For example, clients can call `SleepDatabase.getInstance(context)` to instantiate
+     * a new SleepDatabase.
      */
     companion object {
         /**
-         * INSTANCE will keep a reference to any database returned via getDatabase.
+         * INSTANCE will keep a reference to any database returned via getInstance.
          *
          * This will help us avoid repeatedly initializing the database, which is expensive.
          */
         @Volatile
-        private var INSTANCE: SleepQualityDatabase? = null
+        private var INSTANCE: SleepDatabase? = null
 
         /**
          * Helper function to get the database.
@@ -68,9 +68,9 @@ abstract class SleepQualityDatabase : RoomDatabase() {
          *
          * @param Context The application context Singleton, used to get access to the filesystem.
          */
-        fun getDatabase(
+        fun getInstance(
                 context: Context
-        ): SleepQualityDatabase {
+        ): SleepDatabase {
             // multiple threads can ask for the database at the same time, ensure we only initialize
             // it once by using synchronized. Only one thread may enter a synchronized block at a
             // time.
@@ -84,7 +84,7 @@ abstract class SleepQualityDatabase : RoomDatabase() {
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                             context.applicationContext,
-                            SleepQualityDatabase::class.java,
+                            SleepDatabase::class.java,
                             "sleep_history_database"
                     )
                             // Wipes and rebuilds instead of migrating if no Migration object.

@@ -22,7 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.SleepNight
-import com.example.android.trackmysleepquality.database.SleepQualityDatabase.Companion.getDatabase
+import com.example.android.trackmysleepquality.database.SleepDatabase.Companion.getInstance
 import com.example.android.trackmysleepquality.formatNights
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
@@ -36,9 +36,9 @@ import kotlinx.coroutines.experimental.android.Main
 class SleepTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
     /**
-     * Hold a reference to SleepQualityDatabase.
+     * Hold a reference to SleepDatabase.
      */
-    val database = getDatabase(application)
+    val database = getInstance(application)
 
     /** Coroutine variables */
 

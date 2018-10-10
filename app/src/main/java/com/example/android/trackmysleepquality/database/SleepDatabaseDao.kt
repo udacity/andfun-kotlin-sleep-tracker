@@ -28,7 +28,7 @@ import androidx.room.Update
  * Defines methods for using the SleepNight class with Room.
  */
 @Dao
-interface SleepQualityDao {
+interface SleepDatabaseDao {
 
     @Insert
     fun insert(night: SleepNight)
