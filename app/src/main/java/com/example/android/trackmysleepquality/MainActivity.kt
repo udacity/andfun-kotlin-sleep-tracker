@@ -49,4 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
     }
+
+    @Override
+    override fun onBackPressed() {}
 }

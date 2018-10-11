@@ -47,6 +47,10 @@ abstract class SleepDatabase : RoomDatabase() {
          * INSTANCE will keep a reference to any database returned via getInstance.
          *
          * This will help us avoid repeatedly initializing the database, which is expensive.
+         *
+         *  The value of a volatile variable will never be cached, and all writes and
+         *  reads will be done to and from the main memory. It means that changes made by one
+         *  thread to shared data are visible to other threads.
          */
         @Volatile
         private var INSTANCE: SleepDatabase? = null
@@ -88,7 +92,9 @@ abstract class SleepDatabase : RoomDatabase() {
                             "sleep_history_database"
                     )
                             // Wipes and rebuilds instead of migrating if no Migration object.
-                            // Migration is not part of this lesson.
+                            // Migration is not part of this lesson. You can learn more about
+                            // migration with Room in this blog post:
+                            // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
                             .fallbackToDestructiveMigration()
                             .build()
                     // Assign INSTANCE to the newly created database.

@@ -63,32 +63,35 @@ class SleepTrackerViewModel(
      */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    private var _tonight = MutableLiveData<SleepNight?>()
+    private var tonight = MutableLiveData<SleepNight?>()
 
-    private val _nights = database.getAllNights()
-    // Converted _nights to string for displaying
-    val nightsString = Transformations.map(_nights) { nights ->
+    private val nights = database.getAllNights()
+
+    /**
+     * Converted nights to Spanned for displaying.
+     */
+    val nightsString = Transformations.map(nights) { nights ->
         formatNights(nights, application.resources)
     }
 
     /**
-     * True if and only if the start button should be shown.
+     * If tonight has not been set, then the START button should be visible.
      */
-    val startButtonVisible = Transformations.map(_tonight) {
+    val startButtonVisible = Transformations.map(tonight) {
         null == it
     }
 
     /**
-     * True if and only if the stop button should be shown.
+     * If tonight has been set, then the STOP button should be visible.
      */
-    val stopButtonVisible = Transformations.map(_tonight) {
+    val stopButtonVisible = Transformations.map(tonight) {
         null != it
     }
 
     /**
-     * True if and only if the clear button should be shown.
+     * If there are any nights in the database, show the CLEAR button.
      */
-    val clearButtonVisible = Transformations.map(_nights) {
+    val clearButtonVisible = Transformations.map(nights) {
         it?.isNotEmpty()
     }
 
@@ -98,25 +101,25 @@ class SleepTrackerViewModel(
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
-    private var _showToastEvent = MutableLiveData<Boolean?>()
+    private var _showSnackbarEvent = MutableLiveData<Boolean?>()
 
     /**
-     * If this is true, immediately `show()` a toast and call `doneShowingToast()`.
+     * If this is true, immediately `show()` a toast and call `doneShowingSnackbar()`.
      */
-    val showToastEvent: LiveData<Boolean?>
-        get() = _showToastEvent
+    val showSnackBarEvent: LiveData<Boolean?>
+        get() = _showSnackbarEvent
 
     /**
      * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
-    private val _navigateToSleepQuality = MutableLiveData<SleepNight?>()
+    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
 
     /**
      * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
      */
-    val navigateToSleepQuality: LiveData<SleepNight?>
+    val navigateToSleepQuality: LiveData<SleepNight>
         get() = _navigateToSleepQuality
 
     /**
@@ -125,8 +128,8 @@ class SleepTrackerViewModel(
      * It will clear the toast request, so if the user rotates their phone it won't show a duplicate
      * toast.
      */
-    fun doneShowingToast() {
-        _showToastEvent.value = null
+    fun doneShowingSnackbar() {
+        _showSnackbarEvent.value = null
     }
 
     /**
@@ -145,7 +148,7 @@ class SleepTrackerViewModel(
 
     private fun initializeTonight() {
         uiScope.launch {
-            _tonight.value = getTonightFromDatabase()
+            tonight.value = getTonightFromDatabase()
         }
     }
 
@@ -183,17 +186,6 @@ class SleepTrackerViewModel(
     }
 
     /**
-     * Called when the ViewModel is dismantled.
-     * At this point, we want to cancel all coroutines;
-     * otherwise we end up with processes that have nowhere to return to
-     * using memory and resources.
-     */
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-
-    /**
      * Executes when the START button is clicked.
      */
     fun onStart() {
@@ -202,7 +194,7 @@ class SleepTrackerViewModel(
             // and insert it into the database.
             val newNight = SleepNight()
 
-            _tonight.value = newNight
+            tonight.value = newNight
 
             insert(newNight)
         }
@@ -213,7 +205,10 @@ class SleepTrackerViewModel(
      */
     fun onStop() {
         uiScope.launch {
-            val oldNight = _tonight.value ?: return@launch
+            // In Kotlin, the return@label syntax is used for specifying which function among
+            // several nested ones this statement returns from.
+            // In this case, we are specifying to return from launch().
+            val oldNight = tonight.value ?: return@launch
 
             // Update the night in the database to add the end time.
             oldNight.endTimeMilli = System.currentTimeMillis()
@@ -233,11 +228,22 @@ class SleepTrackerViewModel(
             // Clear the database table.
             clear()
 
-            // and clear _tonight since it's no longer in the database
-            _tonight.value = null
+            // And clear tonight since it's no longer in the database
+            tonight.value = null
 
-            // Show a toast because it's friendly.
-            _showToastEvent.value = true
+            // Show a snackbar message, because it's friendly.
+            _showSnackbarEvent.value = true
         }
+    }
+
+    /**
+     * Called when the ViewModel is dismantled.
+     * At this point, we want to cancel all coroutines;
+     * otherwise we end up with processes that have nowhere to return to
+     * using memory and resources.
+     */
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }

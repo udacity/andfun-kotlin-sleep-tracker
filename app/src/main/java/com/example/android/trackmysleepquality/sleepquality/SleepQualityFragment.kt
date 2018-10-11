@@ -65,7 +65,6 @@ class SleepQualityFragment : Fragment() {
                 ViewModelProviders.of(
                         this, viewModelFactory).get(SleepQualityViewModel::class.java)
 
-        // DO NOT FORGET THIS!!!
         // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
         binding.sleepQualityViewModel = sleepQualityViewModel
