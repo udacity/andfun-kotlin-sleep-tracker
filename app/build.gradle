@@ -53,7 +53,6 @@ dependencies {
     // Support libraries
     implementation "androidx.appcompat:appcompat:$supportlibVersion"
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
-    implementation "com.google.android.material:material:$supportlibVersion"
 
     // Android KTX
     implementation 'androidx.core:core-ktx:1.0.0'

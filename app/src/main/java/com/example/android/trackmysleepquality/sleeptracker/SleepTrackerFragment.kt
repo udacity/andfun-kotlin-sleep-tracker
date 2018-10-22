@@ -24,7 +24,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.Injection
 import com.example.android.trackmysleepquality.R
@@ -99,6 +98,7 @@ class SleepTrackerFragment : Fragment() {
                 // Also, in the Navigation Editor, for Quality -> Tracker, check "Inclusive" for
                 // popping the stack to get the correct behavior if we press stop multiple times
                 // followed by back.
+                // Also: https://stackoverflow.com/questions/28929637/difference-and-uses-of-oncreate-oncreateview-and-onactivitycreated-in-fra
                 this.findNavController().navigate(
                         SleepTrackerFragmentDirections
                                 .actionSleepTrackerFragmentToSleepQualityFragment(night.startTimeMilli))

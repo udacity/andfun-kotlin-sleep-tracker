@@ -154,7 +154,10 @@ class SleepTrackerViewModel(
 
     /**
      *  Handling the case of the stopped app or forgotten recording,
-     *  the start and end times will be the same.
+     *  the start and end times will be the same.j
+     *
+     *  If the start time and end time are not the same, then we do not have an unfinished
+     *  recording.
      */
     suspend fun getTonightFromDatabase(): SleepNight? {
         return withContext(Dispatchers.IO) {
