@@ -157,7 +157,7 @@ class SleepTrackerViewModel(
      *  If the start time and end time are not the same, then we do not have an unfinished
      *  recording.
      */
-    suspend fun getTonightFromDatabase(): SleepNight? {
+    private suspend fun getTonightFromDatabase(): SleepNight? {
         return withContext(Dispatchers.IO) {
             var night = database.getTonight()
             if (night?.endTimeMilli != night?.startTimeMilli) {
@@ -167,20 +167,19 @@ class SleepTrackerViewModel(
         }
     }
 
-
-    suspend fun insert(night: SleepNight) {
+    private suspend fun insert(night: SleepNight) {
         withContext(Dispatchers.IO) {
             database.insert(night)
         }
     }
 
-    suspend fun update(night: SleepNight) {
+    private suspend fun update(night: SleepNight) {
         withContext(Dispatchers.IO) {
             database.update(night)
         }
     }
 
-    suspend fun clear() {
+    private suspend fun clear() {
         withContext(Dispatchers.IO) {
             database.clear()
         }

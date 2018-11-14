@@ -21,7 +21,7 @@ import android.content.Context
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModelFactory
-import com.example.android.trackmysleepquality.sleepquality.SleepTrackerViewModelFactory
+import com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModelFactory
 
 /**
  * Enables injection of data sources.
@@ -45,7 +45,7 @@ object Injection {
      *       creates the ViewModel for the Fragment.
      */
 
-    fun provideUserDataSource(context: Context): SleepDatabaseDao {
+    private fun provideUserDataSource(context: Context): SleepDatabaseDao {
         val database = SleepDatabase.getInstance(context)
         return database.sleepDatabaseDao()
     }

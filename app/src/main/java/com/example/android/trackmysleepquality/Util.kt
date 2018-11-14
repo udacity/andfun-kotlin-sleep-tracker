@@ -16,6 +16,7 @@
 
 package com.example.android.trackmysleepquality
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Build
 import android.text.Html
@@ -53,6 +54,7 @@ fun convertNumericQualityToString(quality: Int, resources: Resources): String {
  * dd-yyyy - day in month and full year numerically
  * HH:mm - Hours and minutes in 24hr format
  */
+@SuppressLint("SimpleDateFormat")
 fun convertLongToDateString(systemTime: Long): String {
     return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
             .format(systemTime).toString()

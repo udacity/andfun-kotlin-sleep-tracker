@@ -70,7 +70,7 @@ abstract class SleepDatabase : RoomDatabase() {
          * To learn more about Singleton read the wikipedia article:
          * https://en.wikipedia.org/wiki/Singleton_pattern
          *
-         * @param Context The application context Singleton, used to get access to the filesystem.
+         * @param context The application context Singleton, used to get access to the filesystem.
          */
         fun getInstance(
                 context: Context

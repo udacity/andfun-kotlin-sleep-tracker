@@ -1,4 +1,4 @@
-package com.example.android.trackmysleepquality.sleepquality
+package com.example.android.trackmysleepquality.sleeptracker
 
 /*
  * Copyright 2018, The Android Open Source Project
@@ -20,7 +20,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
-import com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel
 
 /**
  * This is pretty much boiler plate code for a ViewModel Factory.

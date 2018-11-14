@@ -45,7 +45,7 @@ interface SleepDatabaseDao {
     /**
      * Selects and returns the row that matches the supplied start time, which is our key.
      *
-     * @param key startTimeMili to match
+     * @param key startTimeMilli to match
      */
     @Query("SELECT * from daily_sleep_quality_table WHERE start_time_milli = :key")
     fun get(key: Long): SleepNight
