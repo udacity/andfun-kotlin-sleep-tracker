@@ -51,11 +51,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Support libraries
-    implementation "androidx.appcompat:appcompat:$supportlibVersion"
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.fragment:fragment:1.0.0"
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
 
     // Android KTX
-    implementation 'androidx.core:core-ktx:1.0.0'
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$room_version"
@@ -72,10 +73,3 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:$navigationVersion"
 }
 
-// Kotlin coroutines are still experimental in the 1.2 branch,
-// this will allow us to use them in our project; you may be able to remove this.
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}

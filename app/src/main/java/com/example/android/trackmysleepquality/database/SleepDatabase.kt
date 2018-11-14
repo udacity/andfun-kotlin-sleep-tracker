@@ -34,7 +34,7 @@ abstract class SleepDatabase : RoomDatabase() {
     /**
      * Connects the database to the DAO.
      */
-    abstract fun sleepQualityDao(): SleepDatabaseDao
+    abstract fun sleepDatabaseDao(): SleepDatabaseDao
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.

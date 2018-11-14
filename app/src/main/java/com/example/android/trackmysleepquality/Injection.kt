@@ -47,7 +47,7 @@ object Injection {
 
     fun provideUserDataSource(context: Context): SleepDatabaseDao {
         val database = SleepDatabase.getInstance(context)
-        return database.sleepQualityDao()
+        return database.sleepDatabaseDao()
     }
 
     fun provideSleepQualityViewModelFactory(
