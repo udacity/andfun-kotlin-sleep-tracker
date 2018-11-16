@@ -194,9 +194,9 @@ class SleepTrackerViewModel(
             // and insert it into the database.
             val newNight = SleepNight()
 
-            tonight.value = newNight
-
             insert(newNight)
+
+            tonight.value = getTonightFromDatabase()
         }
     }
 

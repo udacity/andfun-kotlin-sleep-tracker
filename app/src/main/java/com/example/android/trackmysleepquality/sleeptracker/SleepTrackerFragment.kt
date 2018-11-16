@@ -91,7 +91,6 @@ class SleepTrackerFragment : Fragment() {
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
         sleepTrackerViewModel.navigateToSleepQuality.observe(this, Observer { night ->
             night?.let {
-                // TODO: NOTE: We can remove this note after script is done.
                 // We need to get the navController from this, because button is not ready, and it
                 // just has to be a view. For some reason, this only matters if we hit stop again
                 // after using the back button, not if we hit stop and choose a quality.
@@ -101,7 +100,7 @@ class SleepTrackerFragment : Fragment() {
                 // Also: https://stackoverflow.com/questions/28929637/difference-and-uses-of-oncreate-oncreateview-and-onactivitycreated-in-fra
                 this.findNavController().navigate(
                         SleepTrackerFragmentDirections
-                                .actionSleepTrackerFragmentToSleepQualityFragment(night.startTimeMilli))
+                                .actionSleepTrackerFragmentToSleepQualityFragment(night.nightId))
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
                 sleepTrackerViewModel.doneNavigating()

@@ -47,7 +47,7 @@ interface SleepDatabaseDao {
      *
      * @param key startTimeMilli to match
      */
-    @Query("SELECT * from daily_sleep_quality_table WHERE start_time_milli = :key")
+    @Query("SELECT * from daily_sleep_quality_table WHERE nightId = :key")
     fun get(key: Long): SleepNight
 
     /**
@@ -63,12 +63,12 @@ interface SleepDatabaseDao {
      *
      * sorted by start time in descending order.
      */
-    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC")
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
     fun getAllNights(): LiveData<List<SleepNight>>
 
     /**
      * Selects and returns the latest night.
      */
-    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY start_time_milli DESC LIMIT 1")
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC LIMIT 1")
     fun getTonight(): SleepNight?
 }
