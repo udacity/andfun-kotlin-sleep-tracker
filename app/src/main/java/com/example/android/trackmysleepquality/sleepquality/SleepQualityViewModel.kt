@@ -16,7 +16,6 @@
 
 package com.example.android.trackmysleepquality.sleepquality
 
-//import com.example.android.trackmysleepquality.Event
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
