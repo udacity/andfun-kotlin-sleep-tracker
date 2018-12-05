@@ -39,7 +39,7 @@ interface SleepDatabaseDao {
      *
      * @param night new value to write
      */
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     fun update(night: SleepNight)
 
     /**
