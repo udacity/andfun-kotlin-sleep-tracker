@@ -51,7 +51,7 @@ class SleepDatabaseTest {
                 // Allowing main thread queries, just for testing.
                 .allowMainThreadQueries()
                 .build()
-        sleepDao = db.sleepDatabaseDao()
+        sleepDao = db.sleepDatabaseDao
     }
 
     @After

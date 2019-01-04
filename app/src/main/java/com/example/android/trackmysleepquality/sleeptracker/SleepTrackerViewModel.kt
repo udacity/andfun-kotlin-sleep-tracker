@@ -34,13 +34,8 @@ import kotlinx.coroutines.withContext
  * ViewModel for SleepTrackerFragment.
  */
 class SleepTrackerViewModel(
-        dataSource: SleepDatabaseDao,
+        val database: SleepDatabaseDao,
         application: Application) : ViewModel() {
-
-    /**
-     * Hold a reference to SleepDatabase via SleepDatabaseDao.
-     */
-    val database = dataSource
 
     /** Coroutine variables */
 
@@ -188,7 +183,7 @@ class SleepTrackerViewModel(
     /**
      * Executes when the START button is clicked.
      */
-    fun onStart() {
+    fun onStartTracking() {
         uiScope.launch {
             // Create a new night, which captures the current time,
             // and insert it into the database.
@@ -203,7 +198,7 @@ class SleepTrackerViewModel(
     /**
      * Executes when the STOP button is clicked.
      */
-    fun onStop() {
+    fun onStopTracking() {
         uiScope.launch {
             // In Kotlin, the return@label syntax is used for specifying which function among
             // several nested ones this statement returns from.
