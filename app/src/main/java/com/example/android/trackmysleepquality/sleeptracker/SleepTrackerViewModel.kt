@@ -20,7 +20,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
@@ -35,7 +35,7 @@ import kotlinx.coroutines.withContext
  */
 class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
-        application: Application) : ViewModel() {
+        application: Application) : AndroidViewModel(application) {
 
     /** Coroutine variables */
 
