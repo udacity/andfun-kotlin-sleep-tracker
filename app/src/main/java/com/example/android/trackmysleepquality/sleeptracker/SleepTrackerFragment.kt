@@ -44,6 +44,14 @@ class SleepTrackerFragment : Fragment() {
         val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
 
+        //TODO (01) Update onCreateView() to get an instance of SleepTrackerViewModel
+        //using the factory.
+
+        //TODO (02) Update to set this as the lifecycle owner of the binding.
+
+        //TODO (04) Update to assign sleepTrackerViewModel binding variable
+        //to the sleepTrackerViewModel.
+
         return binding.root
     }
 }
