@@ -16,20 +16,59 @@
 
 package com.example.android.trackmysleepquality.database
 
-// TODO (01) Create annotated interface SleepDatabaseDao.
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+
+/**
+ * Defines methods for using the SleepNight class with Room.
+ */
+@Dao
 interface SleepDatabaseDao {
 
-// TODO (02) Add annotated insert() method for inserting a single SleepNight.
+    @Insert
+    fun insert(night: SleepNight)
 
-// TODO (03) Add annotated update() method for updating a SleepNight.
+    /**
+     * When updating a row with a value already set in a column,
+     * replaces the old value with the new one.
+     *
+     * @param night new value to write
+     */
+    @Update
+    fun update(night: SleepNight)
 
-// TODO (04) Add annotated get() method that gets the SleepNight by key.
+    /**
+     * Selects and returns the row that matches the supplied start time, which is our key.
+     *
+     * @param key startTimeMilli to match
+     */
+    @Query("SELECT * from daily_sleep_quality_table WHERE nightId = :key")
+    fun get(key: Long): SleepNight?
 
-// TODO (05) Add annotated clear() method and query.
+    /**
+     * Deletes all values from the table.
+     *
+     * This does not delete the table, only its contents.
+     */
+    @Query("DELETE FROM daily_sleep_quality_table")
+    fun clear()
 
-// TODO (06) Add annotated getAllNights() method and query.
+    /**
+     * Selects and returns all rows in the table,
+     *
+     * sorted by start time in descending order.
+     */
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
+    fun getAllNights(): LiveData<List<SleepNight>>
 
-// TODO (07) Add annotated getTonight() method and query.
+    /**
+     * Selects and returns the latest night.
+     */
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC LIMIT 1")
+    fun getTonight(): SleepNight?
 
 }
 
