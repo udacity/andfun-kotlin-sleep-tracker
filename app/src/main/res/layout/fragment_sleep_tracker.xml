@@ -24,6 +24,7 @@
          click handlers, and state variables. -->
     <data>
 
+        <!-- TODO (03) Create a <variable> that references the ViewModel class. -->
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->
