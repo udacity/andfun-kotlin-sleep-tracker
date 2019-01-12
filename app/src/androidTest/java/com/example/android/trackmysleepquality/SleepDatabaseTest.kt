@@ -16,6 +16,10 @@
 
 package com.example.android.trackmysleepquality
 
+// TODO (07) Uncomment the code in this file, then run the tests.
+
+// TODO (08) Optional: Add tests to exercise the other DAO methods.
+
 //import androidx.room.Room
 //import androidx.test.ext.junit.runners.AndroidJUnit4
 //import androidx.test.platform.app.InstrumentationRegistry
