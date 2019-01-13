@@ -23,6 +23,7 @@
          the whole ViewModel, so that we can access the LiveData,
          click handlers, and state variables. -->
     <data>
+
         <variable
             name="sleepTrackerViewModel"
             type="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel" />
@@ -51,6 +52,7 @@
                  which keeps it displayed and updated in the TextView
                  whenever it changes. -->
 
+            <!-- TODO (13) Display nightsString in the  text view. -->
             <TextView
                 android:id="@+id/textview"
                 android:layout_width="match_parent"
@@ -65,6 +67,7 @@
              from the ViewModel. The click handler is in the ViewModel as well, and
              you can set it for the Views using this lambda pattern. -->
 
+        <!-- TODO (10) Add the click handlers to the buttons. -->
         <Button
             android:id="@+id/start_button"
             style="@style/SleepButtons"
