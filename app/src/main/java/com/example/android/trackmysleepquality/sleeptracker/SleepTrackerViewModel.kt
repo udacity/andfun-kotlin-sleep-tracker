@@ -60,6 +60,9 @@ class SleepTrackerViewModel(
         formatNights(nights, application.resources)
     }
 
+    //TODO (01) create encapsulated LiveData navigateToSleepQuality and doneNavigating() function.
+    //Use them in onStopTracking() to trigger navigation.
+
     init {
         initializeTonight()
     }

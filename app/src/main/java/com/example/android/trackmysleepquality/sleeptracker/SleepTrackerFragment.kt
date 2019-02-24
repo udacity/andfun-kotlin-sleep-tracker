@@ -60,6 +60,8 @@ class SleepTrackerFragment : Fragment() {
 
         binding.setLifecycleOwner(this)
 
+        //TODO (02) Add an observer for navigateToSleepQuality.
+
         return binding.root
     }
 }
