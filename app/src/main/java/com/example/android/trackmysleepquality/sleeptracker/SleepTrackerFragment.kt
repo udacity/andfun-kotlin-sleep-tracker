@@ -62,6 +62,8 @@ class SleepTrackerFragment : Fragment() {
 
         binding.setLifecycleOwner(this)
 
+        //TODO (05) Add an observer that shows a Snackbar.
+
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
         sleepTrackerViewModel.navigateToSleepQuality.observe(this, Observer { night ->
             night?.let {
