@@ -24,6 +24,7 @@
      click handlers, and state variables. -->
     <data>
 
+        <!-- TODO (08) Create a <variable> that references the SleepQualityViewModel class. -->
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->
@@ -46,6 +47,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- TODO (09) Update all the images to use the onSetSleepQuality() click handler. -->
         <ImageView
             android:id="@+id/quality_zero_image"
             android:layout_width="@dimen/icon_size"

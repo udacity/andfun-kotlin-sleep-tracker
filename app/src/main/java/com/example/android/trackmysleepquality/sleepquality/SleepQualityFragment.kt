@@ -47,6 +47,11 @@ class SleepQualityFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
+        //TODO (06) Using the SleepTrackerFragment code as a reference, get the passed in arguments,
+        //and get the SleepQualityViewModel and add it to data binding.
+
+        //TODO (07) implement an observer for navigateToSleepTracker.
+
         return binding.root
     }
 }
