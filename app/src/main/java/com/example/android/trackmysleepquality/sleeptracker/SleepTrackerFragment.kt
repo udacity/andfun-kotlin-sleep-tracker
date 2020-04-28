@@ -72,12 +72,12 @@ class SleepTrackerFragment : Fragment() {
                    alertDialog.setTitle("Alerta") // O Titulo da notificação
                    alertDialog.setMessage(R.string.confirm_clear) // a mensagem ou alerta
 
-                   alertDialog.setPositiveButton(R.string.confirm, { _, _ ->
+                   alertDialog.setPositiveButton(R.string.confirm, {dialog,wich->
                         sleepTrackerViewModel.onClearConfirm()
 
                    })
 
-                   alertDialog.setNegativeButton(R.string.cancel, { _, _ ->
+                   alertDialog.setNegativeButton(R.string.cancel, {dialog,wich ->
 
 
                    })
