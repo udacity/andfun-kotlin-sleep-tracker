@@ -69,6 +69,7 @@ class SleepTrackerViewModel(
         it != null
     }
 
+
     val clearButtonVisible = Transformations.map(nights) {
         it?.isNotEmpty()
     }
@@ -81,12 +82,15 @@ class SleepTrackerViewModel(
         _showSnackBarEvent.value = false
     }
 
+
     /**
      * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
+
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
+
 
     /**
      * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
@@ -191,6 +195,7 @@ class SleepTrackerViewModel(
     fun onClear() {
         uiScope.launch {
 
+
             _showSnackBarEvent.value = true
         }
     }
@@ -215,6 +220,4 @@ class SleepTrackerViewModel(
         super.onCleared()
         viewModelJob.cancel()
     }
-
-
 }
