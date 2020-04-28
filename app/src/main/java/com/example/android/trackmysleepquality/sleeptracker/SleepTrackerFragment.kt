@@ -16,18 +16,22 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -62,7 +66,26 @@ class SleepTrackerFragment : Fragment() {
 
         binding.setLifecycleOwner(this)
 
-        //TODO (05) Add an observer that shows a Snackbar.
+       sleepTrackerViewModel.showSnackBarEvent.observe(this, Observer {
+           if(it == true) {
+                   var alertDialog = AlertDialog.Builder(activity)
+                   alertDialog.setTitle("Alerta") // O Titulo da notificação
+                   alertDialog.setMessage(R.string.confirm_clear) // a mensagem ou alerta
+
+                   alertDialog.setPositiveButton(R.string.confirm, { _, _ ->
+                        sleepTrackerViewModel.onClearConfirm()
+
+                   })
+
+                   alertDialog.setNegativeButton(R.string.cancel, { _, _ ->
+
+
+                   })
+                   alertDialog.show()
+
+               sleepTrackerViewModel.doneShowingSnackBar()
+           }
+       })
 
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
         sleepTrackerViewModel.navigateToSleepQuality.observe(this, Observer { night ->

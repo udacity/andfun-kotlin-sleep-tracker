@@ -53,4 +53,8 @@
     <!-- Toast to play after Clear button has been pressed -->
     <string name="cleared_message">All your data is gone forever.</string>
 
+    <string name="confirm_clear">"You'll lose all nights records"</string>
+    <string name="confirm">"Erase"</string>
+    <string name="cancel">"Cancel"</string>
+
 </resources>
