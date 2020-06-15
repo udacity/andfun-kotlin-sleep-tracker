@@ -135,6 +135,8 @@ class SleepTrackerViewModel(
             oldNight.endTimeMilli = System.currentTimeMillis()
 
             update(oldNight)
+            // Clear this value to avoid updating the latest night
+            tonight.value = null
         }
     }
 
