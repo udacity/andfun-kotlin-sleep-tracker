@@ -58,7 +58,7 @@ class SleepTrackerFragment : Fragment() {
 
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         //TODO (02) Add an observer for navigateToSleepQuality.
 
