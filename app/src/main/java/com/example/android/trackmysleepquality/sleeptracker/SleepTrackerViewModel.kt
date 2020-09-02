@@ -34,21 +34,12 @@ class SleepTrackerViewModel(
         application: Application) : AndroidViewModel(application) {
 
     /**
-     * viewModelJob allows us to cancel all coroutines started by this ViewModel.
      */
-    private var viewModelJob = Job()
 
     /**
-     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
      *
-     * Because we pass it [viewModelJob], any coroutine started in this uiScope can be cancelled
-     * by calling `viewModelJob.cancel()`
      *
-     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
-     * the main thread on Android. This is a sensible default because most coroutines started by
-     * a [ViewModel] update the UI after performing some processing.
      */
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private var tonight = MutableLiveData<SleepNight?>()
 
@@ -133,7 +124,7 @@ class SleepTrackerViewModel(
     }
 
     private fun initializeTonight() {
-        uiScope.launch {
+        viewModelScope.launch {
             tonight.value = getTonightFromDatabase()
         }
     }
@@ -177,7 +168,7 @@ class SleepTrackerViewModel(
      * Executes when the START button is clicked.
      */
     fun onStartTracking() {
-        uiScope.launch {
+        viewModelScope.launch {
             // Create a new night, which captures the current time,
             // and insert it into the database.
             val newNight = SleepNight()
@@ -192,7 +183,7 @@ class SleepTrackerViewModel(
      * Executes when the STOP button is clicked.
      */
     fun onStopTracking() {
-        uiScope.launch {
+        viewModelScope.launch {
             // In Kotlin, the return@label syntax is used for specifying which function among
             // several nested ones this statement returns from.
             // In this case, we are specifying to return from launch(),
@@ -213,7 +204,7 @@ class SleepTrackerViewModel(
      * Executes when the CLEAR button is clicked.
      */
     fun onClear() {
-        uiScope.launch {
+        viewModelScope.launch {
             // Clear the database table.
             clear()
 
@@ -226,13 +217,5 @@ class SleepTrackerViewModel(
     }
 
     /**
-     * Called when the ViewModel is dismantled.
-     * At this point, we want to cancel all coroutines;
-     * otherwise we end up with processes that have nowhere to return to
-     * using memory and resources.
      */
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
 }
