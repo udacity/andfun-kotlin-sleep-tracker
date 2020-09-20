@@ -62,7 +62,7 @@ interface SleepDatabaseDao {
      * sorted by start time in descending order.
      */
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
-    fun getAllNights(): LiveData<List<SleepNight>>
+    suspend fun getAllNights(): LiveData<List<SleepNight>>
 
     /**
      * Selects and returns the latest night.
