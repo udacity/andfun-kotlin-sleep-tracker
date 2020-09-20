@@ -34,14 +34,6 @@ class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-    /**
-     */
-
-    /**
-     *
-     *
-     */
-
     private var tonight = MutableLiveData<SleepNight?>()
 
     private val nights = database.getAllNights()
@@ -103,7 +95,7 @@ class SleepTrackerViewModel(
 
 
     private suspend fun clear() {
-            database.clear() }
+            database.clear() 
     }
 
     private suspend fun update(night: SleepNight) {
