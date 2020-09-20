@@ -34,6 +34,13 @@ class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
+    /**
+     */
+
+    /**
+     *
+     *
+     */
 
     private var tonight = MutableLiveData<SleepNight?>()
 
@@ -138,16 +145,17 @@ class SleepTrackerViewModel(
             return night
     }
 
+
     private suspend fun clear() {
-        database.clear()
+            database.clear()
     }
 
     private suspend fun update(night: SleepNight) {
-        database.update(night)
+            database.update(night)
     }
 
     private suspend fun insert(night: SleepNight) {
-        database.insert(night)
+            database.insert(night)
     }
 
     /**
@@ -202,4 +210,6 @@ class SleepTrackerViewModel(
         _showSnackbarEvent.value = true
     }
 
+    /**
+     */
 }
