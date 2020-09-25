@@ -183,6 +183,9 @@ class SleepTrackerViewModel(
 
             // Set state to navigate to the SleepQualityFragment.
             _navigateToSleepQuality.value = oldNight
+                
+            // Clear this value to avoid updating the latest night
+            tonight.value = null
         }
     }
 
