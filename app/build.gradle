@@ -16,16 +16,17 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+// Kotlin Android Extensions is deprecated, which means that using Kotlin synthetics for view binding is no longer supported.
+// apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.example.android.trackmysleepquality"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -35,13 +36,17 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     // Enables data binding.
     buildFeatures {
         dataBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -58,15 +63,16 @@ dependencies {
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
-    implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+    // The APIs in lifecycle-extensions have been deprecated. Instead, add dependencies for the specific Lifecycle artifacts you need.
+    // implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
 
     // Navigation
-    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
