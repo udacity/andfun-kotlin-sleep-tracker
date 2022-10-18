@@ -42,7 +42,7 @@
     <string name="hours_slept"><![CDATA[<b>Hours:Minutes:Seconds</b>]]></string>
 
     <!-- Sleep quality strings -->
-    <string name="how_was_hour_sleep">How was your sleep?</string>
+    <string name="how_was_your_sleep">How was your sleep?</string>
     <string name="zero_very_bad">Very bad</string>
     <string name="one_poor">Poor</string>
     <string name="two_soso">So-so</string>
